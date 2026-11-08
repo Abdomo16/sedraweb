@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+/* Design tokens (Phase 2 will refine). Mobile-first. */
+@theme {
+  --color-cream: #fbf6ec;
+  --color-ink: #1d2a24;
+  --color-cedar-50: #eef6f1;
+  --color-cedar-100: #d5e8dd;
+  --color-cedar-500: #2f7d5f;
+  --color-cedar-700: #1f5b45;
+  --color-cedar-900: #12362a;
+  --color-coral-400: #f58a7c;
+  --color-coral-500: #f26b5b;
+
+  --font-body: var(--font-cairo), system-ui, sans-serif;
+  --font-display: var(--font-baloo), var(--font-cairo), sans-serif;
+
+  --radius-card: 1.25rem;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

@@ -1,0 +1,236 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum AgeBand {
+  BABY
+  KIDS
+  OLDER
+}
+
+enum Gender {
+  GIRLS
+  BOYS
+  UNISEX
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  RETURNED
+}
+
+enum PaymentMethod {
+  COD
+  CARD
+  WALLET
+  INSTAPAY
+}
+
+enum PaymentStatus {
+  UNPAID
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model Category {
+  id             String    @id @default(cuid())
+  slug           String    @unique
+  name           String
+  /// Old internal name used on the previous site (admin reference only).
+  legacyName     String?
+  description    String?
+  ageBand        AgeBand?
+  gender         Gender?
+  image          String?
+  seoTitle       String?
+  seoDescription String?
+  sortOrder      Int       @default(0)
+  parentId       String?
+  parent         Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children       Category[] @relation("CategoryTree")
+  products       Product[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([parentId])
+}
+
+model Product {
+  id             String        @id @default(cuid())
+  slug           String        @unique
+  name           String
+  description    String
+  material       String?
+  status         ProductStatus @default(DRAFT)
+  seoTitle       String?
+  seoDescription String?
+  categoryId     String
+  category       Category      @relation(fields: [categoryId], references: [id])
+  images         ProductImage[]
+  variants       Variant[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([categoryId])
+  @@index([status])
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String
+  sortOrder Int     @default(0)
+
+  @@index([productId])
+}
+
+model Variant {
+  id             String      @id @default(cuid())
+  productId      String
+  product        Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku            String      @unique
+  size           String
+  color          String?
+  /// Prices are stored in piastres (EGP * 100) to avoid float errors.
+  price          Int
+  compareAtPrice Int?
+  stock          Int         @default(0)
+  orderItems     OrderItem[]
+
+  @@index([productId])
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  number        Int           @unique @default(autoincrement())
+  status        OrderStatus   @default(PENDING)
+  paymentMethod PaymentMethod
+  paymentStatus PaymentStatus @default(UNPAID)
+  subtotal      Int
+  shippingFee   Int
+  total         Int
+  customerName  String
+  phone         String
+  email         String?
+  governorate   String
+  city          String
+  address       String
+  notes         String?
+  items         OrderItem[]
+  shipments     Shipment[]
+  payments      Payment[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([status])
+  @@index([phone])
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variantId String
+  variant   Variant @relation(fields: [variantId], references: [id])
+  /// Snapshots so later edits never change past orders.
+  name      String
+  size      String
+  color     String?
+  price     Int
+  quantity  Int
+
+  @@index([orderId])
+}
+
+model Shipment {
+  id             String   @id @default(cuid())
+  orderId        String
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  provider       String   @default("bosta")
+  trackingNumber String?
+  status         String?
+  awbUrl         String?
+  codAmount      Int      @default(0)
+  raw            Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([trackingNumber])
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  orderId     String
+  order       Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  provider    String
+  providerRef String?
+  amount      Int
+  status      PaymentStatus @default(PENDING)
+  raw         Json?
+  createdAt   DateTime      @default(now())
+
+  @@unique([provider, providerRef])
+  @@index([orderId])
+}
+
+model ShippingRate {
+  id          String @id @default(cuid())
+  governorate String @unique
+  price       Int
+  freeOver    Int?
+}
+
+model Post {
+  id             String    @id @default(cuid())
+  slug           String    @unique
+  title          String
+  excerpt        String?
+  body           String
+  cover          String?
+  seoTitle       String?
+  seoDescription String?
+  publishedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Redirect {
+  id        String   @id @default(cuid())
+  fromPath  String   @unique
+  toPath    String
+  permanent Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Setting {
+  key   String @id
+  value Json
+}
