@@ -70,6 +70,8 @@ model Category {
   seoTitle       String?
   seoDescription String?
   sortOrder      Int       @default(0)
+  /// Hidden categories disappear from the menu, listings and sitemap (page redirects away).
+  isActive       Boolean   @default(true)
   parentId       String?
   parent         Category?  @relation("CategoryTree", fields: [parentId], references: [id])
   children       Category[] @relation("CategoryTree")

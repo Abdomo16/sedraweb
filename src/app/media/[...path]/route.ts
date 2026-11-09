@@ -30,7 +30,11 @@ export async function GET(_request: Request, ctx: RouteContext<"/media/[...path]
     return new Response(new Uint8Array(data), {
       headers: {
         "Content-Type": type,
-        "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
+        // Uploaded files get a unique name and never change, so they can be cached for good.
+        "Cache-Control":
+          segments[0] === "uploads"
+            ? "public, max-age=31536000, immutable"
+            : "public, max-age=3600, stale-while-revalidate=86400",
       },
     });
   } catch {

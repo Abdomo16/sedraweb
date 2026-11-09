@@ -37,11 +37,13 @@ function mapCategory(row: CategoryRow): Category {
     ageBand,
     gender,
     ageLabel: row.ageLabel ?? undefined,
+    image: row.image ?? undefined,
     brand: row.brand ?? undefined,
     intro: row.description ?? "",
     seoTitle: row.seoTitle ?? row.name,
     seoDescription: row.seoDescription ?? "",
     tone: toneByBand[ageBand][gender],
+    updatedAt: row.updatedAt.toISOString(),
   };
 }
 
@@ -67,6 +69,7 @@ function mapProduct(row: ProductRow): Product {
     status: row.status,
     needsReview: row.needsReview,
     isNew: row.isNew,
+    updatedAt: row.updatedAt.toISOString(),
     images: row.images.map((i) => ({ url: i.url, alt: i.alt })),
     variants: row.variants.map((v) => ({
       sku: v.sku,
@@ -83,7 +86,10 @@ export async function getCategories(): Promise<Category[]> {
   "use cache";
   cacheLife("hours");
   cacheTag("catalog", "categories");
-  const rows = await db.category.findMany({ orderBy: { sortOrder: "asc" } });
+  const rows = await db.category.findMany({
+    where: { isActive: true },
+    orderBy: { sortOrder: "asc" },
+  });
   return rows.map(mapCategory);
 }
 
@@ -91,7 +97,7 @@ export async function getCategory(slug: string): Promise<Category | undefined> {
   "use cache";
   cacheLife("hours");
   cacheTag("catalog", `category:${slug}`);
-  const row = await db.category.findUnique({ where: { slug } });
+  const row = await db.category.findFirst({ where: { slug, isActive: true } });
   return row ? mapCategory(row) : undefined;
 }
 
@@ -99,7 +105,10 @@ export async function getCategoriesByAge(ageBand: AgeBand): Promise<Category[]> 
   "use cache";
   cacheLife("hours");
   cacheTag("catalog", "categories");
-  const rows = await db.category.findMany({ where: { ageBand }, orderBy: { sortOrder: "asc" } });
+  const rows = await db.category.findMany({
+    where: { ageBand, isActive: true },
+    orderBy: { sortOrder: "asc" },
+  });
   return rows.map(mapCategory);
 }
 
@@ -115,7 +124,7 @@ export async function getProducts(opts?: {
   const rows = await db.product.findMany({
     where: {
       status: { in: visibleStatuses() },
-      ...(opts?.categorySlug ? { category: { slug: opts.categorySlug } } : {}),
+      category: { isActive: true, ...(opts?.categorySlug ? { slug: opts.categorySlug } : {}) },
       ...(opts?.onlyNew ? { isNew: true } : {}),
     },
     include: productInclude,
@@ -130,7 +139,7 @@ export async function getProduct(slug: string): Promise<Product | undefined> {
   cacheLife("hours");
   cacheTag("catalog", `product:${slug}`);
   const row = await db.product.findFirst({
-    where: { slug, status: { in: visibleStatuses() } },
+    where: { slug, status: { in: visibleStatuses() }, category: { isActive: true } },
     include: productInclude,
   });
   return row ? mapProduct(row) : undefined;
@@ -145,7 +154,7 @@ export async function getRelated(product: Product, limit = 6): Promise<Product[]
     where: {
       status: { in: statuses },
       slug: { not: product.slug },
-      category: { slug: product.categorySlug },
+      category: { slug: product.categorySlug, isActive: true },
     },
     include: productInclude,
     orderBy: { createdAt: "desc" },
@@ -157,7 +166,7 @@ export async function getRelated(product: Product, limit = 6): Promise<Product[]
           where: {
             status: { in: statuses },
             slug: { not: product.slug },
-            category: { slug: { not: product.categorySlug } },
+            category: { slug: { not: product.categorySlug }, isActive: true },
           },
           include: productInclude,
           orderBy: { createdAt: "desc" },
@@ -174,4 +183,13 @@ export function minPrice(product: Product): number {
 export function minCompare(product: Product): number | undefined {
   const v = product.variants.find((x) => x.compareAtPrice);
   return v?.compareAtPrice;
+}
+
+/** Where a retired URL should go (set by the admin when a slug changes or a product is removed). */
+export async function getRedirect(path: string): Promise<string | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("redirects");
+  const row = await db.redirect.findUnique({ where: { fromPath: path } });
+  return row?.toPath ?? null;
 }

@@ -16,6 +16,8 @@ const schema = z.object({
   /** Folder for uploaded media (product photos). Keep it outside `public/`. */
   MEDIA_DIR: z.string().default("./storage"),
   AUTH_SECRET: z.string().min(16).optional(),
+  /** Hostname that serves the admin in production, e.g. admin.sedrakidsegypt.com. */
+  ADMIN_HOST: z.string().optional(),
   // Added in later phases:
   BOSTA_API_KEY: z.string().optional(),
   BOSTA_WEBHOOK_SECRET: z.string().optional(),

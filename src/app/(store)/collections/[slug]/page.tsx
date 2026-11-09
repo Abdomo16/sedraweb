@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Faq } from "@/components/store/HomeSections";
 import { ProductGrid } from "@/components/store/ProductCard";
 import { Container } from "@/components/ui/Layout";
-import { getCategories, getCategory, getProducts } from "@/features/catalog/queries";
+import { getCategories, getCategory, getProducts, getRedirect } from "@/features/catalog/queries";
 import { defaultOgImages } from "@/lib/seo/og";
 import { breadcrumbSchema, collectionSchema, faqSchema } from "@/lib/seo/schema";
+
+// Unknown slugs (new categories/products added from the admin) render on demand.
+export const instant = false;
 
 export async function generateStaticParams() {
   return (await getCategories()).map((c) => ({ slug: c.slug }));
@@ -34,7 +37,11 @@ export async function generateMetadata({
 export default async function CollectionPage({ params }: PageProps<"/collections/[slug]">) {
   const { slug } = await params;
   const category = await getCategory(slug);
-  if (!category) notFound();
+  if (!category) {
+    const to = await getRedirect(`/collections/${slug}`);
+    if (to) permanentRedirect(to);
+    notFound();
+  }
 
   const [products, categories] = await Promise.all([
     getProducts({ categorySlug: category.slug }),

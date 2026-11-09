@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ProductCarousel } from "@/components/store/ProductCard";
 import { PurchasePanel } from "@/components/store/PurchasePanel";
@@ -12,11 +12,15 @@ import {
   getCategory,
   getProduct,
   getProducts,
+  getRedirect,
   getRelated,
   minPrice,
 } from "@/features/catalog/queries";
 import { defaultOgImages } from "@/lib/seo/og";
 import { breadcrumbSchema, productSchema } from "@/lib/seo/schema";
+
+// Unknown slugs (new categories/products added from the admin) render on demand.
+export const instant = false;
 
 export async function generateStaticParams() {
   return (await getProducts()).map((p) => ({ slug: p.slug }));
@@ -52,7 +56,11 @@ export async function generateMetadata({
 export default async function ProductPage({ params }: PageProps<"/products/[slug]">) {
   const { slug } = await params;
   const product = await getProduct(slug);
-  if (!product) notFound();
+  if (!product) {
+    const to = await getRedirect(`/products/${slug}`);
+    if (to) permanentRedirect(to);
+    notFound();
+  }
   const category = await getCategory(product.categorySlug);
   if (!category) notFound();
   const related = await getRelated(product);

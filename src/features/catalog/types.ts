@@ -12,12 +12,15 @@ export interface Category {
   ageBand: AgeBand;
   gender: Gender;
   ageLabel?: string;
+  /** Cover photo for the collection card. */
+  image?: string;
   /** Set when the category belongs to a secondary brand line, e.g. "HE and SHE". */
   brand?: string;
   intro: string;
   seoTitle: string;
   seoDescription: string;
   tone: Tone;
+  updatedAt?: string;
 }
 
 export interface Variant {
@@ -46,6 +49,7 @@ export interface Product {
   status: ProductStatus;
   needsReview: boolean;
   isNew?: boolean;
+  updatedAt?: string;
   images: ProductImage[];
   variants: Variant[];
 }

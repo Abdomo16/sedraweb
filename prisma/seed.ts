@@ -13,6 +13,7 @@ const prisma = new PrismaClient({ adapter });
 const categories = [
   {
     slug: "baby-girls",
+    image: "/media/products/204/1.webp",
     name: "بيجامات بيبي بناتي من 6 شهور لسنتين",
     shortName: "بيبي بناتي",
     legacyName: "بيبي بناتي",
@@ -27,6 +28,7 @@ const categories = [
   },
   {
     slug: "baby-boys",
+    image: "/media/products/102/1.webp",
     name: "بيجامات بيبي ولادي من 6 شهور لسنتين",
     shortName: "بيبي ولادي",
     legacyName: "بيبي ولادي",
@@ -41,6 +43,7 @@ const categories = [
   },
   {
     slug: "girls",
+    image: "/media/products/414/1.webp",
     name: "بيجامات أطفال بناتي من 3 لـ 8 سنين",
     shortName: "أطفال بناتي",
     legacyName: "وسط بناتي",
@@ -55,6 +58,7 @@ const categories = [
   },
   {
     slug: "boys",
+    image: "/media/products/309/1.webp",
     name: "بيجامات أطفال ولادي من 3 لـ 8 سنين",
     shortName: "أطفال ولادي",
     legacyName: "وسط ولادي",
@@ -69,6 +73,7 @@ const categories = [
   },
   {
     slug: "older-girls",
+    image: "/media/products/601/1.webp",
     name: "بيجامات بناتي من 9 لـ 14 سنة",
     shortName: "كبار بناتي",
     legacyName: "محير بناتي",
@@ -83,6 +88,7 @@ const categories = [
   },
   {
     slug: "older-boys",
+    image: "/media/products/506/1.webp",
     name: "بيجامات ولادي من 9 لـ 14 سنة",
     shortName: "كبار ولادي",
     legacyName: "محير ولادي",
@@ -97,6 +103,7 @@ const categories = [
   },
   {
     slug: "he-and-she-girls",
+    image: "/media/products/806/1.webp",
     name: "هوم وير بناتي من 11 لـ 16 سنة HE and SHE",
     shortName: "SHE بناتي",
     legacyName: "شي",
@@ -112,6 +119,7 @@ const categories = [
   },
   {
     slug: "he-and-she-boys",
+    image: "/media/products/702/1.webp",
     name: "هوم وير ولادي من 11 لـ 16 سنة HE and SHE",
     shortName: "HE ولادي",
     legacyName: "هي",
