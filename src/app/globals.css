@@ -1,21 +1,43 @@
 @import "tailwindcss";
 
-/* Design tokens (Phase 2 will refine). Mobile-first. */
+/*
+ * Design tokens, derived from the Sedra logo:
+ * leaf green (tree), sun yellow (duck), sky blue (water drops).
+ * Light tints are for backgrounds and decoration only; text and buttons
+ * use the dark leaf shades for contrast.
+ */
 @theme {
-  --color-cream: #fbf6ec;
-  --color-ink: #1d2a24;
-  --color-cedar-50: #eef6f1;
-  --color-cedar-100: #d5e8dd;
-  --color-cedar-500: #2f7d5f;
-  --color-cedar-700: #1f5b45;
-  --color-cedar-900: #12362a;
-  --color-coral-400: #f58a7c;
-  --color-coral-500: #f26b5b;
+  --color-cream: #fcf9ef;
+  --color-ink: #2b2a25;
+
+  --color-leaf-50: #f2f8ec;
+  --color-leaf-100: #e0eed3;
+  --color-leaf-500: #6aa63f;
+  --color-leaf-700: #3f7a22;
+  --color-leaf-900: #243f17;
+
+  --color-sun-100: #fdf2c4;
+  --color-sun-400: #f7cf2d;
+  --color-sun-500: #e6b800;
+
+  --color-sky-100: #dff0fb;
+  --color-sky-500: #3fa0dc;
+
+  --color-sand-100: #f5ecd8;
+  --color-rose-100: #fbe3ea;
 
   --font-body: var(--font-cairo), system-ui, sans-serif;
   --font-display: var(--font-baloo), var(--font-cairo), sans-serif;
 
   --radius-card: 1.25rem;
+  --shadow-soft: 0 6px 24px -8px rgb(36 63 23 / 0.2);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 html {
