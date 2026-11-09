@@ -272,6 +272,54 @@ Differentiate so it does not read as a copy of 2S:
 
 Rules: no 2S images, copy, section names or icon set; thumb-reachable controls; minimum 44px tap targets; fixed aspect ratios to avoid layout shift; Arabic RTL polish (numerals, spacing); light motion only.
 
+## 9d. Admin dashboard requirements (owner-controlled catalog)
+
+Top business priority stays **SEO: rank #1 for "سيدرا كيدز"**. Everything below must keep SEO intact (slugs, redirects, cache revalidation).
+
+The owner manages the whole store from `/admin`, with no developer needed for daily work:
+
+**Categories**
+- See all categories in one list (name, age band, gender, product count, status).
+- Add, edit and reorder categories; edit name, slug, intro text, SEO title/description, image.
+- Hide a category (it disappears from the menu and sitemap) instead of deleting when it has products.
+- Brand lines such as "HE and SHE" are supported as their own category group.
+
+**Products**
+- See all products in one list with search, filter (category, status, stock) and pagination.
+- Add a product (name, code/SKU, description, material, category, images, SEO fields).
+- Edit anything on a product at any time (text, price, images, order of images).
+- Variants per size/colour with price, compare-at price and stock quantity.
+- **Mark out of stock:** per variant or for the whole product with one toggle; the page stays live and indexable and shows "غير متاح حالياً" (no 404, no ranking loss), and it can be restored just as fast.
+- **Hide / unpublish** a product without deleting it (status DRAFT/ARCHIVED).
+- **Delete a product**: soft-delete first (recoverable); when it was published, a redirect to its category is created automatically so Google never hits a 404.
+- Bulk actions: publish/unpublish, mark out of stock, change prices by a percentage.
+
+**Safety**
+- Admin only (login, rate limiting), every action validated and permission-checked on the server.
+- Confirmation before delete; every write triggers cache revalidation so the storefront updates immediately.
+- Old category names used internally by the company (e.g. "محير" for 9-14 years) are kept as an admin-only label; public names use searchable Arabic wording.
+
+**Orders (owner access to every order and the customer data)**
+- Orders list: number, date, customer name, phone, governorate, total, payment method and status, order status; search by name/phone/order number; filters by date, status, payment method, governorate.
+- Order detail: full customer data (name, phone, full address, notes), items with sizes and quantities, totals, payment info, shipment/tracking (from Phase 6), and a status history.
+- Change status (new, confirmed, shipped, delivered, returned, cancelled), add internal notes, print the order, export orders to CSV/Excel.
+- New-order alert in the dashboard (and an email/WhatsApp notification to the owner, later phase).
+
+**Statistics dashboard**
+- Date range filter (today, 7 days, 30 days, custom).
+- Number of orders, revenue, average order value, cancelled/returned rate.
+- **Top products** (most ordered, by quantity and revenue) and slowest products; sales by category, by age band and by brand line (Sedra / HE and SHE).
+- Orders by governorate and by payment method (COD vs card vs wallet).
+- Customers: new vs returning, repeat buyers.
+- Stock alerts: low stock and out-of-stock products.
+- Traffic and search performance (visits, Google queries for "سيدرا كيدز", rankings) are read from Google Search Console / analytics, linked from the dashboard, not rebuilt.
+
+**Privacy of customer data:** customer details are visible only to admin accounts, every view/export is logged, no personal data goes to logs or analytics, and CSV exports are admin-only.
+
+**Handoff to the owner:** the developer imports the real photos with placeholder prices (as DRAFT, flagged `needsReview`); the company owner gets his own admin account and sets the real prices, sizes and stock. Products with placeholder prices can never be published until the owner confirms them (see `PHASE-3-4-PLAN.md`, "Data strategy and owner handoff").
+
+Delivered in Phase 4 (parts C, D, F and G of `PHASE-3-4-PLAN.md`): catalog management plus the orders and statistics screens (built and tested with sample data). Real orders start flowing in Phase 5, so those screens fill with real data then; shipment and payment details are added in Phases 6-7.
+
 ## 10. Open items
 
 1. Reference site URL + what to keep/improve.
