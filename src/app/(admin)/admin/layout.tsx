@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "لوحة التحكم",
-  robots: { index: false, follow: false },
+  robots: { index: false, follow: false, nocache: true },
 };
 
-/** Admin shell. Auth guard is added in Phase 4. */
+// Everything under /admin reads the session cookie, so it is rendered per request.
+export const instant = false;
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return <div className="min-h-dvh bg-white p-4">{children}</div>;
+  return <div className="bg-cream text-ink min-h-dvh">{children}</div>;
 }
