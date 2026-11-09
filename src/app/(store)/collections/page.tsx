@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { ProductGrid } from "@/components/store/ProductCard";
 import { Container } from "@/components/ui/Layout";
 import { getCategories, getProducts } from "@/features/catalog/queries";
+import { defaultOgImages } from "@/lib/seo/og";
 import { breadcrumbSchema } from "@/lib/seo/schema";
 
 export const metadata: Metadata = {
@@ -11,6 +12,12 @@ export const metadata: Metadata = {
   description:
     "تصفح كل بيجامات سيدرا كيدز للرضع والأطفال والكبار، بنات وولاد، بقطن ناعم وشحن لكل المحافظات.",
   alternates: { canonical: "/collections" },
+  openGraph: {
+    title: "كل الأقسام | بيجامات أطفال ورضع",
+    description:
+      "تصفح كل بيجامات سيدرا كيدز للرضع والأطفال والكبار، بنات وولاد، بقطن ناعم وشحن لكل المحافظات.",
+    images: defaultOgImages,
+  },
 };
 
 export default async function CollectionsPage() {

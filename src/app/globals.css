@@ -50,3 +50,49 @@ html {
     scroll-behavior: auto;
   }
 }
+
+/*
+ * Motion. Only transform/opacity are animated, never on the LCP text, and
+ * everything is switched off for people who prefer reduced motion.
+ */
+@keyframes float-y {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -9px;
+  }
+}
+
+.float {
+  animation: float-y 7s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    translate: 0 28px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* Scroll-driven reveal. Browsers without support simply show the content. */
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: reveal-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float,
+  .reveal {
+    animation: none;
+  }
+}

@@ -11,6 +11,7 @@ enum AgeBand {
   BABY
   KIDS
   OLDER
+  TEEN
 }
 
 enum Gender {
@@ -53,15 +54,24 @@ model Category {
   id             String    @id @default(cuid())
   slug           String    @unique
   name           String
+  /// Short label used in menus, chips and breadcrumbs.
+  shortName      String    @default("")
   /// Old internal name used on the previous site (admin reference only).
   legacyName     String?
+  /// Intro paragraph shown at the top of the collection page.
   description    String?
+  /// Human-readable age range, e.g. "من 3 لـ 8 سنين".
+  ageLabel       String?
+  /// Brand line when it differs from the main brand, e.g. "HE and SHE".
+  brand          String?
   ageBand        AgeBand?
   gender         Gender?
   image          String?
   seoTitle       String?
   seoDescription String?
   sortOrder      Int       @default(0)
+  /// Hidden categories disappear from the menu, listings and sitemap (page redirects away).
+  isActive       Boolean   @default(true)
   parentId       String?
   parent         Category?  @relation("CategoryTree", fields: [parentId], references: [id])
   children       Category[] @relation("CategoryTree")
@@ -76,9 +86,15 @@ model Product {
   id             String        @id @default(cuid())
   slug           String        @unique
   name           String
+  /// Product code printed on the photos / used internally, e.g. "102".
+  code           String?       @unique
   description    String
   material       String?
   status         ProductStatus @default(DRAFT)
+  /// Shown in the "new arrivals" section.
+  isNew          Boolean       @default(false)
+  /// Imported with placeholder data; the owner must confirm price/sizes before publishing.
+  needsReview    Boolean       @default(false)
   seoTitle       String?
   seoDescription String?
   categoryId     String

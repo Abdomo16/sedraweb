@@ -17,9 +17,11 @@ export function Logo({
     <Image
       src="/logo.png"
       alt={siteConfig.name}
-      width={181}
-      height={120}
-      priority={priority}
+      width={700}
+      height={425}
+      sizes="120px"
+      loading={priority ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : "auto"}
       className={className}
     />
   );
@@ -43,7 +45,7 @@ export async function Header() {
         </Link>
         <Link
           href="/collections"
-          className="text-ink/55 shadow-soft flex min-h-11 flex-1 items-center gap-2 rounded-full bg-white px-4 text-sm"
+          className="text-ink/70 shadow-soft flex min-h-11 flex-1 items-center gap-2 rounded-full bg-white px-4 text-sm"
         >
           <Icon name="search" className="size-5" />
           ابحث عن بيجامة...
@@ -132,6 +134,11 @@ export async function Footer() {
         <nav aria-label="معلومات">
           <p className="mb-3 font-bold">معلومات</p>
           <ul className="grid gap-2 text-sm text-white/80">
+            <li>
+              <Link href="/about" className="hover:text-white">
+                من نحن
+              </Link>
+            </li>
             <li>سياسة الشحن</li>
             <li>الاستبدال والاسترجاع</li>
             <li>دليل المقاسات</li>

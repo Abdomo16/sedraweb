@@ -1,11 +1,19 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/Layout";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { ProductImage } from "@/components/store/ProductImage";
 import { Price } from "@/components/ui/Price";
 import { minCompare, minPrice } from "@/features/catalog/queries";
 import type { Product } from "@/features/catalog/types";
 
-export function ProductCard({ product, className = "" }: { product: Product; className?: string }) {
+export function ProductCard({
+  product,
+  className = "",
+  priority = false,
+}: {
+  product: Product;
+  className?: string;
+  priority?: boolean;
+}) {
   const available = product.variants.filter((v) => v.stock > 0).map((v) => v.size);
   const price = minPrice(product);
   const compare = minCompare(product);
@@ -17,7 +25,11 @@ export function ProductCard({ product, className = "" }: { product: Product; cla
     <article className={`group ${className}`}>
       <Link href={`/products/${product.slug}`} className="block">
         <div className="rounded-card shadow-soft relative overflow-hidden transition-transform group-hover:-translate-y-0.5">
-          <ImagePlaceholder tone={product.tone} label={product.name} />
+          <ProductImage
+            product={product}
+            sizes="(min-width: 768px) 25vw, 50vw"
+            priority={priority}
+          />
           <span className="absolute start-2 top-2 flex flex-col items-start gap-1">
             {product.isNew ? <Badge>جديد</Badge> : null}
             {discount > 0 ? (
@@ -38,10 +50,10 @@ export function ProductCard({ product, className = "" }: { product: Product; cla
                   {s}
                 </span>
               ))}
-              {extra > 0 ? <span className="text-ink/60 text-[11px]">+{extra}</span> : null}
+              {extra > 0 ? <span className="text-ink/75 text-[11px]">+{extra}</span> : null}
             </>
           ) : (
-            <span className="text-ink/60 text-xs">غير متاح حالياً</span>
+            <span className="text-ink/75 text-xs">غير متاح حالياً</span>
           )}
         </div>
       </Link>
@@ -61,12 +73,19 @@ export function ProductCarousel({ products }: { products: Product[] }) {
   );
 }
 
-export function ProductGrid({ products }: { products: Product[] }) {
+/** `eagerCount`: how many leading cards are above the fold and load eagerly. */
+export function ProductGrid({
+  products,
+  eagerCount = 0,
+}: {
+  products: Product[];
+  eagerCount?: number;
+}) {
   return (
     <ul className="grid grid-cols-2 gap-x-3 gap-y-7 md:grid-cols-4">
-      {products.map((p) => (
+      {products.map((p, i) => (
         <li key={p.slug}>
-          <ProductCard product={p} />
+          <ProductCard product={p} priority={i < eagerCount} />
         </li>
       ))}
     </ul>

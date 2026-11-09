@@ -1,20 +1,115 @@
-import { categories, products } from "./mock";
-import type { AgeBand, Category, Product } from "./types";
+import { cacheLife, cacheTag } from "next/cache";
+import type { Prisma } from "@/generated/prisma/client";
+import { db } from "@/lib/db";
+import { env } from "@/lib/env";
+import type { AgeBand, Category, Gender, Product, ProductStatus, Tone } from "./types";
 
 /**
- * Data access boundary. Pages only call these functions; Phase 4 replaces
- * the internals with Prisma without touching any page.
+ * Data access boundary. Pages only call these functions. Every read is
+ * cached and tagged so an admin edit can refresh exactly what changed:
+ *   revalidateTag("catalog", "max")      everything
+ *   revalidateTag("category:<slug>", ...) one collection
+ *   revalidateTag("product:<slug>", ...)  one product
  */
+
+const toneByBand: Record<AgeBand, Record<Gender, Tone>> = {
+  BABY: { GIRLS: "sun", BOYS: "sky", UNISEX: "mint" },
+  KIDS: { GIRLS: "rose", BOYS: "mint", UNISEX: "sand" },
+  OLDER: { GIRLS: "sun", BOYS: "sand", UNISEX: "mint" },
+  TEEN: { GIRLS: "rose", BOYS: "sky", UNISEX: "mint" },
+};
+
+/** DRAFT products only show when SHOW_DRAFT_PRODUCTS=true (local development). */
+function visibleStatuses(): ProductStatus[] {
+  return env.SHOW_DRAFT_PRODUCTS ? ["ACTIVE", "DRAFT"] : ["ACTIVE"];
+}
+
+type CategoryRow = Prisma.CategoryGetPayload<object>;
+
+function mapCategory(row: CategoryRow): Category {
+  const ageBand = (row.ageBand ?? "KIDS") as AgeBand;
+  const gender = (row.gender ?? "UNISEX") as Gender;
+  return {
+    slug: row.slug,
+    name: row.name,
+    shortName: row.shortName || row.name,
+    legacyName: row.legacyName ?? undefined,
+    ageBand,
+    gender,
+    ageLabel: row.ageLabel ?? undefined,
+    image: row.image ?? undefined,
+    brand: row.brand ?? undefined,
+    intro: row.description ?? "",
+    seoTitle: row.seoTitle ?? row.name,
+    seoDescription: row.seoDescription ?? "",
+    tone: toneByBand[ageBand][gender],
+    updatedAt: row.updatedAt.toISOString(),
+  };
+}
+
+const productInclude = {
+  category: true,
+  images: { orderBy: { sortOrder: "asc" } },
+  variants: { orderBy: { id: "asc" } },
+} satisfies Prisma.ProductInclude;
+
+type ProductRow = Prisma.ProductGetPayload<{ include: typeof productInclude }>;
+
+function mapProduct(row: ProductRow): Product {
+  const ageBand = (row.category.ageBand ?? "KIDS") as AgeBand;
+  const gender = (row.category.gender ?? "UNISEX") as Gender;
+  return {
+    slug: row.slug,
+    name: row.name,
+    code: row.code ?? undefined,
+    description: row.description,
+    material: row.material ?? undefined,
+    categorySlug: row.category.slug,
+    tone: toneByBand[ageBand][gender],
+    status: row.status,
+    needsReview: row.needsReview,
+    isNew: row.isNew,
+    updatedAt: row.updatedAt.toISOString(),
+    images: row.images.map((i) => ({ url: i.url, alt: i.alt })),
+    variants: row.variants.map((v) => ({
+      sku: v.sku,
+      size: v.size,
+      color: v.color ?? undefined,
+      price: v.price,
+      compareAtPrice: v.compareAtPrice ?? undefined,
+      stock: v.stock,
+    })),
+  };
+}
+
 export async function getCategories(): Promise<Category[]> {
-  return categories;
+  "use cache";
+  cacheLife("hours");
+  cacheTag("catalog", "categories");
+  const rows = await db.category.findMany({
+    where: { isActive: true },
+    orderBy: { sortOrder: "asc" },
+  });
+  return rows.map(mapCategory);
 }
 
 export async function getCategory(slug: string): Promise<Category | undefined> {
-  return categories.find((c) => c.slug === slug);
+  "use cache";
+  cacheLife("hours");
+  cacheTag("catalog", `category:${slug}`);
+  const row = await db.category.findFirst({ where: { slug, isActive: true } });
+  return row ? mapCategory(row) : undefined;
 }
 
 export async function getCategoriesByAge(ageBand: AgeBand): Promise<Category[]> {
-  return categories.filter((c) => c.ageBand === ageBand);
+  "use cache";
+  cacheLife("hours");
+  cacheTag("catalog", "categories");
+  const rows = await db.category.findMany({
+    where: { ageBand, isActive: true },
+    orderBy: { sortOrder: "asc" },
+  });
+  return rows.map(mapCategory);
 }
 
 export async function getProducts(opts?: {
@@ -22,24 +117,63 @@ export async function getProducts(opts?: {
   onlyNew?: boolean;
   limit?: number;
 }): Promise<Product[]> {
-  let list = products;
-  if (opts?.categorySlug) list = list.filter((x) => x.categorySlug === opts.categorySlug);
-  if (opts?.onlyNew) list = list.filter((x) => x.isNew);
-  return opts?.limit ? list.slice(0, opts.limit) : list;
+  "use cache";
+  cacheLife("hours");
+  cacheTag("catalog", "products");
+  if (opts?.categorySlug) cacheTag(`category:${opts.categorySlug}`);
+  const rows = await db.product.findMany({
+    where: {
+      status: { in: visibleStatuses() },
+      category: { isActive: true, ...(opts?.categorySlug ? { slug: opts.categorySlug } : {}) },
+      ...(opts?.onlyNew ? { isNew: true } : {}),
+    },
+    include: productInclude,
+    orderBy: [{ category: { sortOrder: "asc" } }, { createdAt: "desc" }, { id: "asc" }],
+    ...(opts?.limit ? { take: opts.limit } : {}),
+  });
+  return rows.map(mapProduct);
 }
 
 export async function getProduct(slug: string): Promise<Product | undefined> {
-  return products.find((x) => x.slug === slug);
+  "use cache";
+  cacheLife("hours");
+  cacheTag("catalog", `product:${slug}`);
+  const row = await db.product.findFirst({
+    where: { slug, status: { in: visibleStatuses() }, category: { isActive: true } },
+    include: productInclude,
+  });
+  return row ? mapProduct(row) : undefined;
 }
 
 export async function getRelated(product: Product, limit = 6): Promise<Product[]> {
-  const same = products.filter(
-    (x) => x.categorySlug === product.categorySlug && x.slug !== product.slug,
-  );
-  const rest = products.filter(
-    (x) => x.categorySlug !== product.categorySlug && x.slug !== product.slug,
-  );
-  return [...same, ...rest].slice(0, limit);
+  "use cache";
+  cacheLife("hours");
+  cacheTag("catalog", "products", `product:${product.slug}`);
+  const statuses = visibleStatuses();
+  const same = await db.product.findMany({
+    where: {
+      status: { in: statuses },
+      slug: { not: product.slug },
+      category: { slug: product.categorySlug, isActive: true },
+    },
+    include: productInclude,
+    orderBy: { createdAt: "desc" },
+    take: limit,
+  });
+  const rest =
+    same.length < limit
+      ? await db.product.findMany({
+          where: {
+            status: { in: statuses },
+            slug: { not: product.slug },
+            category: { slug: { not: product.categorySlug }, isActive: true },
+          },
+          include: productInclude,
+          orderBy: { createdAt: "desc" },
+          take: limit - same.length,
+        })
+      : [];
+  return [...same, ...rest].map(mapProduct);
 }
 
 export function minPrice(product: Product): number {
@@ -49,4 +183,13 @@ export function minPrice(product: Product): number {
 export function minCompare(product: Product): number | undefined {
   const v = product.variants.find((x) => x.compareAtPrice);
   return v?.compareAtPrice;
+}
+
+/** Where a retired URL should go (set by the admin when a slug changes or a product is removed). */
+export async function getRedirect(path: string): Promise<string | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("redirects");
+  const row = await db.redirect.findUnique({ where: { fromPath: path } });
+  return row?.toPath ?? null;
 }

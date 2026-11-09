@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Faq } from "@/components/store/HomeSections";
 import { ProductGrid } from "@/components/store/ProductCard";
 import { Container } from "@/components/ui/Layout";
-import { getCategories, getCategory, getProducts } from "@/features/catalog/queries";
+import { getCategories, getCategory, getProducts, getRedirect } from "@/features/catalog/queries";
+import { defaultOgImages } from "@/lib/seo/og";
 import { breadcrumbSchema, collectionSchema, faqSchema } from "@/lib/seo/schema";
+
+// Unknown slugs (new categories/products added from the admin) render on demand.
+export const instant = false;
 
 export async function generateStaticParams() {
   return (await getCategories()).map((c) => ({ slug: c.slug }));
@@ -22,14 +26,22 @@ export async function generateMetadata({
     title: category.seoTitle,
     description: category.seoDescription,
     alternates: { canonical: `/collections/${category.slug}` },
-    openGraph: { title: category.seoTitle, description: category.seoDescription },
+    openGraph: {
+      title: category.seoTitle,
+      description: category.seoDescription,
+      images: defaultOgImages,
+    },
   };
 }
 
 export default async function CollectionPage({ params }: PageProps<"/collections/[slug]">) {
   const { slug } = await params;
   const category = await getCategory(slug);
-  if (!category) notFound();
+  if (!category) {
+    const to = await getRedirect(`/collections/${slug}`);
+    if (to) permanentRedirect(to);
+    notFound();
+  }
 
   const [products, categories] = await Promise.all([
     getProducts({ categorySlug: category.slug }),
@@ -60,7 +72,7 @@ export default async function CollectionPage({ params }: PageProps<"/collections
         ]}
       />
       <Container className="py-6">
-        <nav aria-label="مسار التصفح" className="text-ink/60 mb-3 text-xs">
+        <nav aria-label="مسار التصفح" className="text-ink/75 mb-3 text-xs">
           <Link href="/">الرئيسية</Link> / <Link href="/collections">الأقسام</Link> /{" "}
           {category.shortName}
         </nav>
@@ -68,9 +80,10 @@ export default async function CollectionPage({ params }: PageProps<"/collections
           {category.name}
         </h1>
         <p className="text-ink/80 mt-2 text-sm leading-8">{category.intro}</p>
+        <h2 className="sr-only">منتجات {category.name}</h2>
         <div className="mt-6">
           {products.length ? (
-            <ProductGrid products={products} />
+            <ProductGrid products={products} eagerCount={2} />
           ) : (
             <p className="rounded-card bg-sand-100 p-6 text-center">منتجات القسم قريباً.</p>
           )}
