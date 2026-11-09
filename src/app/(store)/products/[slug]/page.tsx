@@ -5,7 +5,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { ProductCarousel } from "@/components/store/ProductCard";
 import { PurchasePanel } from "@/components/store/PurchasePanel";
 import { Icon } from "@/components/ui/Icons";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { ProductImage } from "@/components/store/ProductImage";
 import { Container } from "@/components/ui/Layout";
 import { formatEgp } from "@/components/ui/Price";
 import {
@@ -15,7 +15,6 @@ import {
   getRelated,
   minPrice,
 } from "@/features/catalog/queries";
-import type { Tone } from "@/features/catalog/types";
 import { defaultOgImages } from "@/lib/seo/og";
 import { breadcrumbSchema, productSchema } from "@/lib/seo/schema";
 
@@ -31,18 +30,24 @@ export async function generateMetadata({
   if (!product) return {};
   const category = await getCategory(product.categorySlug);
   const title = `${product.name} | ${category?.shortName ?? "بيجامات أطفال"}`;
-  const description = `${product.name} من سيدرا كيدز، ${product.material}. السعر يبدأ من ${formatEgp(
-    minPrice(product),
-  )}. شحن لكل المحافظات والدفع عند الاستلام.`;
+  const description = `${product.name} من سيدرا كيدز${
+    product.material ? `، ${product.material}` : ""
+  }. السعر يبدأ من ${formatEgp(minPrice(product))}. شحن لكل المحافظات والدفع عند الاستلام.`;
   return {
     title,
     description,
+    ...(product.status !== "ACTIVE" ? { robots: { index: false, follow: false } } : {}),
     alternates: { canonical: `/products/${product.slug}` },
-    openGraph: { title, description, type: "website", images: defaultOgImages },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      images: product.images[0]
+        ? [{ url: product.images[0].url, width: 961, height: 1280, alt: product.images[0].alt }]
+        : defaultOgImages,
+    },
   };
 }
-
-const galleryTones: Tone[] = ["mint", "sun", "sky", "sand", "rose"];
 
 export default async function ProductPage({ params }: PageProps<"/products/[slug]">) {
   const { slug } = await params;
@@ -52,10 +57,8 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
   if (!category) notFound();
   const related = await getRelated(product);
 
-  const slides: Tone[] = [
-    product.tone,
-    ...galleryTones.filter((t) => t !== product.tone).slice(0, 2),
-  ];
+  // Without photos yet, show three illustrated placeholders.
+  const slides = product.images.length ? product.images : [null, null, null];
 
   return (
     <>
@@ -80,11 +83,13 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
             aria-label="صور المنتج"
             className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0"
           >
-            {slides.map((tone, i) => (
-              <li key={tone} className="w-[70%] shrink-0 snap-center md:w-auto">
-                <ImagePlaceholder
-                  tone={tone}
-                  label={`${product.name} - صورة ${i + 1}`}
+            {slides.map((_, i) => (
+              <li key={i} className="w-[70%] shrink-0 snap-center md:w-auto">
+                <ProductImage
+                  product={product}
+                  index={i}
+                  sizes="(min-width: 768px) 50vw, 70vw"
+                  priority={i === 0}
                   className="rounded-card"
                 />
               </li>
@@ -115,7 +120,10 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
             <div className="mt-6 grid gap-2">
               {[
                 { t: "وصف المنتج", c: product.description },
-                { t: "الخامة والعناية", c: `${product.material}. اغسل على درجة حرارة معتدلة.` },
+                {
+                  t: "الخامة والعناية",
+                  c: `${product.material ? `${product.material}. ` : ""}اغسل على درجة حرارة معتدلة.`,
+                },
                 {
                   t: "دليل المقاسات",
                   c: "اختار المقاس حسب سن الطفل. لو بين مقاسين، الأفضل المقاس الأكبر. دليل تفصيلي بالسنتيمتر هيتضاف قريباً.",

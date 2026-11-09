@@ -76,7 +76,7 @@ export default async function CollectionPage({ params }: PageProps<"/collections
         <h2 className="sr-only">منتجات {category.name}</h2>
         <div className="mt-6">
           {products.length ? (
-            <ProductGrid products={products} />
+            <ProductGrid products={products} eagerCount={2} />
           ) : (
             <p className="rounded-card bg-sand-100 p-6 text-center">منتجات القسم قريباً.</p>
           )}

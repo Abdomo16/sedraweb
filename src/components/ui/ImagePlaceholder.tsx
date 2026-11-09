@@ -26,7 +26,7 @@ export function ImagePlaceholder({
     <div
       role="img"
       aria-label={label}
-      className={`relative aspect-[4/5] w-full overflow-hidden ${className}`}
+      className={`relative aspect-[3/4] w-full overflow-hidden ${className}`}
       style={{ backgroundColor: t.bg }}
     >
       <svg viewBox="0 0 160 200" className="absolute inset-0 size-full" aria-hidden="true">

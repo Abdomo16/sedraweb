@@ -99,7 +99,8 @@ The 5 source folders are split further by gender (the models in the photos show 
 | هي (HE) | 11 to 16 | **HE and SHE** line, boys 11-16 |
 | شي (SHE) | 11 to 16 | **HE and SHE** line, girls 11-16 |
 
-- Gender of each product is decided by looking at the photos (contact sheet per folder), then confirmed by the owner in the admin; anything unclear goes to "unisex" or is flagged for review.
+- Gender of each product is decided from the product code printed on every photo, which follows a pattern, and checked against the photos: baby 1xx boys / 2xx girls, kids 3xx boys / 4xx girls, 9-14 5xx boys / 6xx girls, HE 7xx (boys), SHE 8xx (girls). The owner confirms in the admin; anything unclear is flagged for review.
+- **Done (Part B + F):** 74 products / 140 photos imported as DRAFT with placeholder prices (`npm run db:import-photos`, safe to re-run: it never overwrites existing products unless `--force`). Photos live in `storage/` (git-ignored, served at `/media/...`), the printed code/size text is removed from the images, and `SHOW_DRAFT_PRODUCTS=true` (local only) makes drafts visible on the storefront.
 - The existing 7 categories in the database (baby/girls/boys/older/unisex) are re-created to match this table; the "HE and SHE" categories carry the second brand's name and logo.
 - Source photos stay in `data/` (git-ignored). Optimized copies are stored as files on the server (not inside the database); the database stores only their paths, alt text and order.
 

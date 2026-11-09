@@ -48,3 +48,6 @@ next-env.d.ts
 
 # Lighthouse CI reports
 /.lighthouseci
+
+# uploaded / processed media
+/storage
