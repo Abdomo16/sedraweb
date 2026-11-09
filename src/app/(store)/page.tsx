@@ -3,10 +3,13 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { ProductCarousel, ProductGrid } from "@/components/store/ProductCard";
 import { BrandText, Faq, SectionTitle, TrustStrip, homeFaq } from "@/components/store/HomeSections";
 import { AgeTiles } from "@/components/store/home/AgeTiles";
+import { CategoryChips } from "@/components/store/home/CategoryChips";
+import { CategoryCircles } from "@/components/store/home/CategoryCircles";
 import { HeroShowcase } from "@/components/store/home/HeroShowcase";
 import { SocialProof } from "@/components/store/home/SocialProof";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Layout";
+import { mobileCategoryStyle } from "@/config/home";
 import { getProducts } from "@/features/catalog/queries";
 import { faqSchema } from "@/lib/seo/schema";
 
@@ -22,6 +25,7 @@ export default async function HomePage() {
 
   return (
     <>
+      {mobileCategoryStyle === "circles" ? <CategoryCircles /> : <CategoryChips />}
       <HeroShowcase />
       <AgeTiles />
       <section aria-labelledby="new-title" className="py-8">
