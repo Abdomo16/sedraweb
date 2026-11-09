@@ -1,13 +1,56 @@
-import { siteConfig } from "@/config/site";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { ProductCarousel, ProductGrid } from "@/components/store/ProductCard";
+import {
+  AgeShortcuts,
+  BrandText,
+  CategoryCards,
+  Faq,
+  Hero,
+  SectionTitle,
+  TrustStrip,
+  homeFaq,
+} from "@/components/store/HomeSections";
+import { ButtonLink } from "@/components/ui/Button";
+import { Container } from "@/components/ui/Layout";
+import { getProducts } from "@/features/catalog/queries";
+import { faqSchema } from "@/lib/seo/schema";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [fresh, popular] = await Promise.all([
+    getProducts({ onlyNew: true, limit: 8 }),
+    getProducts({ limit: 8 }),
+  ]);
+
   return (
-    <main className="mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center gap-4 px-4 text-center">
-      <h1 className="font-display text-cedar-700 text-4xl font-extrabold">{siteConfig.name}</h1>
-      <p className="text-lg">{siteConfig.tagline}</p>
-      <p className="bg-cedar-100 text-cedar-900 rounded-full px-4 py-2 text-sm">
-        المرحلة 1: الأساس جاهز، التصميم قريباً
-      </p>
-    </main>
+    <>
+      <Hero />
+      <AgeShortcuts />
+      <CategoryCards />
+      <section aria-labelledby="new-title" className="py-8">
+        <Container>
+          <SectionTitle
+            id="new-title"
+            action={
+              <ButtonLink href="/collections" variant="soft">
+                عرض الكل
+              </ButtonLink>
+            }
+          >
+            وصل حديثاً
+          </SectionTitle>
+          <ProductCarousel products={fresh} />
+        </Container>
+      </section>
+      <TrustStrip />
+      <section aria-labelledby="best-title" className="py-4">
+        <Container>
+          <SectionTitle id="best-title">الأكثر طلباً</SectionTitle>
+          <ProductGrid products={popular} />
+        </Container>
+      </section>
+      <BrandText />
+      <Faq items={homeFaq} />
+      <JsonLd data={faqSchema(homeFaq)} />
+    </>
   );
 }
