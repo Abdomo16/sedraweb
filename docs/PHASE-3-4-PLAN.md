@@ -87,6 +87,22 @@ The owner sees every order with the customer's data, and a statistics dashboard.
 
 **Decision:** we do not wait for the price sheet. The developer uploads the real photos now and uses **random placeholder prices**. The **company owner** receives the admin and sets the real prices, sizes, stock and names himself.
 
+**Category and gender mapping for the imported photos**
+
+The 5 source folders are split further by gender (the models in the photos show it), giving these categories:
+
+| Source folder | Age | Becomes |
+|---|---|---|
+| بيبي | 6 months to 2 years | Baby girls, Baby boys |
+| كيدز | 3 to 8 | Girls 3-8, Boys 3-8 |
+| محير (internal name) | 9 to 14 | Girls 9-14, Boys 9-14 |
+| هي (HE) | 11 to 16 | **HE and SHE** line, boys 11-16 |
+| شي (SHE) | 11 to 16 | **HE and SHE** line, girls 11-16 |
+
+- Gender of each product is decided by looking at the photos (contact sheet per folder), then confirmed by the owner in the admin; anything unclear goes to "unisex" or is flagged for review.
+- The existing 7 categories in the database (baby/girls/boys/older/unisex) are re-created to match this table; the "HE and SHE" categories carry the second brand's name and logo.
+- Source photos stay in `data/` (git-ignored). Optimized copies are stored as files on the server (not inside the database); the database stores only their paths, alt text and order.
+
 **Developer side (this phase)**
 - Import the 140 photos from `data/` (5 folders = 5 category groups: baby 6m-2y, kids 3-8, 9-14, HE 11-16, SHE 11-16). Group photos into products by the code printed on each image (e.g. "MODEL: 102"); the grouping is shown to the owner for confirmation, not assumed.
 - Process images: strip nothing from the originals, create WebP/AVIF sizes, keep the code/size text out of the storefront crop when clean originals are not available.

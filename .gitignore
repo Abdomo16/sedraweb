@@ -42,3 +42,9 @@ next-env.d.ts
 
 # prisma generated client
 /src/generated
+
+# raw product photos (WhatsApp originals, not for git)
+/data
+
+# Lighthouse CI reports
+/.lighthouseci
