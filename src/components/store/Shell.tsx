@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { Container } from "@/components/ui/Layout";
+import { CartButton } from "@/components/store/cart/CartButton";
 import { Icon, type IconName } from "@/components/ui/Icons";
 import { getCategories } from "@/features/catalog/queries";
 
@@ -50,13 +51,9 @@ export async function Header() {
           <Icon name="search" className="size-5" />
           ابحث عن بيجامة...
         </Link>
-        <Link
-          href="/cart"
-          aria-label="السلة"
-          className="bg-leaf-100 text-leaf-900 hover:bg-leaf-500 flex size-11 shrink-0 items-center justify-center rounded-full transition-colors hover:text-white"
-        >
+        <CartButton className="bg-leaf-100 text-leaf-900 hover:bg-leaf-500 flex size-11 shrink-0 items-center justify-center rounded-full transition-colors hover:text-white">
           <Icon name="bag" />
-        </Link>
+        </CartButton>
       </Container>
       <nav aria-label="الأقسام" className="border-leaf-700/10 hidden border-t md:block">
         <Container>
@@ -81,12 +78,12 @@ export async function Header() {
 const tabs: { href: string; label: string; icon: IconName }[] = [
   { href: "/", label: "الرئيسية", icon: "home" },
   { href: "/collections", label: "الأقسام", icon: "grid" },
-  { href: "/cart", label: "السلة", icon: "bag" },
 ];
 
 export function BottomTabBar() {
   return (
     <nav
+      id="bottom-tab-bar"
       aria-label="التنقل السريع"
       className="border-leaf-700/10 fixed inset-x-0 bottom-0 z-30 border-t bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
     >
@@ -102,6 +99,12 @@ export function BottomTabBar() {
             </Link>
           </li>
         ))}
+        <li>
+          <CartButton className="text-leaf-900 flex min-h-14 w-full flex-col items-center justify-center gap-0.5 text-xs font-bold">
+            <Icon name="bag" className="size-6" />
+            السلة
+          </CartButton>
+        </li>
       </ul>
     </nav>
   );

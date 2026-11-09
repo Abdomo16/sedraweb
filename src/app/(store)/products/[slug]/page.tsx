@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ProductCarousel } from "@/components/store/ProductCard";
+import { RecentlyViewedTracker } from "@/components/store/cart/RecentlyViewedTracker";
 import { PurchasePanel } from "@/components/store/PurchasePanel";
 import { Icon } from "@/components/ui/Icons";
 import { ProductImage } from "@/components/store/ProductImage";
@@ -81,6 +82,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
         ]}
       />
       <Container className="pt-4 pb-28 md:pb-10">
+        <RecentlyViewedTracker slug={product.slug} />
         <nav aria-label="مسار التصفح" className="text-ink/75 mb-3 text-xs">
           <Link href="/">الرئيسية</Link> /{" "}
           <Link href={`/collections/${category.slug}`}>{category.shortName}</Link>

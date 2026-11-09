@@ -26,7 +26,8 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
   if (!parsed.success) return { error: GENERIC_ERROR };
 
   const h = await headers();
-  const ip = h.get("cf-connecting-ip") ?? h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
+  const ip =
+    h.get("cf-connecting-ip") ?? h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
   const keys = [`ip:${ip}`, `email:${parsed.data.email}`];
 
   if (isBlocked(...keys)) {

@@ -151,6 +151,19 @@ model Order {
   city          String
   address       String
   notes         String?
+  landmark      String?
+  /// Random token used in the customer's confirmation link (the order number alone opens nothing).
+  publicToken   String        @unique @default(cuid())
+  /// Created in the browser per checkout attempt, so a double click never creates two orders.
+  idempotencyKey String?      @unique
+  /// Part of the price the team collected by phone (piastres). The rest is collected on delivery.
+  depositAmount Int           @default(0)
+  callAttempts  Int           @default(0)
+  confirmedAt   DateTime?
+  confirmedBy   String?
+  cancelReason  String?
+  cancelledAt   DateTime?
+  events        OrderEvent[]
   items         OrderItem[]
   shipments     Shipment[]
   payments      Payment[]
@@ -159,6 +172,19 @@ model Order {
 
   @@index([status])
   @@index([phone])
+}
+
+model OrderEvent {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  /// created, confirmed, no_answer, cancelled, reopened, note, shipped, delivered, returned
+  type      String
+  message   String?
+  adminName String?
+  createdAt DateTime @default(now())
+
+  @@index([orderId, createdAt])
 }
 
 model OrderItem {

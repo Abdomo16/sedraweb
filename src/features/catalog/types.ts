@@ -24,6 +24,7 @@ export interface Category {
 }
 
 export interface Variant {
+  id: string;
   sku: string;
   size: string;
   color?: string;

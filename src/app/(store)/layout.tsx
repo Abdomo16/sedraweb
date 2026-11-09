@@ -1,3 +1,4 @@
+import { CartDrawerHost } from "@/components/store/cart/CartDrawerHost";
 import { AnnouncementBar, BottomTabBar, Footer, Header } from "@/components/store/Shell";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { siteConfig } from "@/config/site";
@@ -39,6 +40,7 @@ export default function StoreLayout({ children }: { children: React.ReactNode })
       </main>
       <Footer />
       <BottomTabBar />
+      <CartDrawerHost />
     </>
   );
 }
