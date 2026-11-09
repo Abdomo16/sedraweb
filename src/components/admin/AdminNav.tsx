@@ -7,10 +7,11 @@ import { usePendingOrders } from "./PendingOrdersProvider";
 
 const items: { href: string; label: string; icon: IconName; exact?: boolean; badge?: boolean }[] = [
   { href: "/admin", label: "الرئيسية", icon: "home", exact: true },
-  { href: "/admin/orders", label: "الطلبات", icon: "truck", badge: true },
-  { href: "/admin/products", label: "المنتجات", icon: "bag" },
   { href: "/admin/categories", label: "الأقسام", icon: "grid" },
+  { href: "/admin/products", label: "المنتجات", icon: "bag" },
+  { href: "/admin/orders", label: "الطلبات", icon: "truck", badge: true },
   { href: "/admin/shipping", label: "الشحن", icon: "return" },
+  { href: "/admin/stats", label: "إحصائيات", icon: "chart" },
 ];
 
 export function AdminNav({ variant }: { variant: "side" | "bottom" }) {
@@ -31,7 +32,7 @@ export function AdminNav({ variant }: { variant: "side" | "bottom" }) {
 
   if (variant === "bottom") {
     return (
-      <ul className="mx-auto grid max-w-lg grid-cols-5">
+      <ul className="mx-auto grid max-w-xl grid-cols-6">
         {items.map((i) => (
           <li key={i.href}>
             <Link

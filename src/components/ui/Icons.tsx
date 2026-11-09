@@ -13,6 +13,7 @@ const paths = {
   leaf: "M5 19C5 9 11 4 20 4c0 9-5 15-15 15Zm0 0 8-8",
   chevron: "m9 6 6 6-6 6",
   plus: "M12 5v14M5 12h14",
+  chart: "M4 20V11m6 9V4m6 16v-6m4 6H3",
 } as const;
 
 export type IconName = keyof typeof paths;
