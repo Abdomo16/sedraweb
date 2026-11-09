@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
+import { GOVERNORATES } from "../src/config/governorates";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -80,8 +81,7 @@ const categories = [
     ageBand: "OLDER",
     gender: "GIRLS",
     ageLabel: "من 9 لـ 14 سنة",
-    description:
-      "بيجامات وهوم وير للبنات من 9 لـ 14 سنة بتصاميم أنيقة وخامات مريحة للبيت والنوم.",
+    description: "بيجامات وهوم وير للبنات من 9 لـ 14 سنة بتصاميم أنيقة وخامات مريحة للبيت والنوم.",
     seoTitle: "بيجامات بناتي من 9 لـ 14 سنة",
     seoDescription:
       "بيجامات وهوم وير للبنات من 9 لـ 14 سنة بتصاميم أنيقة وقطن مريح. شحن لكل المحافظات والدفع عند الاستلام.",
@@ -147,6 +147,49 @@ async function main() {
   // The old catch-all "unisex" category no longer exists: drop it if it has no products.
   await prisma.category.deleteMany({ where: { slug: "unisex", products: { none: {} } } });
   console.log(`Seeded ${categories.length} categories`);
+
+  // PLACEHOLDER shipping prices (piastres). The owner sets the real ones in the admin
+  // (Shipping page) and presses "confirm"; checkout stays closed in production until then.
+  // Existing rows are never overwritten, so re-running the seed keeps the owner's edits.
+  const cairo = new Set(["القاهرة", "الجيزة"]);
+  const near = new Set(["الإسكندرية", "القليوبية"]);
+  const far = new Set([
+    "شمال سيناء",
+    "جنوب سيناء",
+    "أسيوط",
+    "سوهاج",
+    "قنا",
+    "الأقصر",
+    "أسوان",
+    "البحر الأحمر",
+    "الوادي الجديد",
+    "مطروح",
+  ]);
+  for (const governorate of GOVERNORATES) {
+    const price = cairo.has(governorate)
+      ? 5000
+      : near.has(governorate)
+        ? 6000
+        : far.has(governorate)
+          ? 9000
+          : 7000;
+    await prisma.shippingRate.upsert({
+      where: { governorate },
+      update: {},
+      create: { governorate, price },
+    });
+  }
+  await prisma.setting.upsert({
+    where: { key: "shipping.freeOver" },
+    update: {},
+    create: { key: "shipping.freeOver", value: 100000 },
+  });
+  await prisma.setting.upsert({
+    where: { key: "shipping.confirmed" },
+    update: {},
+    create: { key: "shipping.confirmed", value: false },
+  });
+  console.log(`Shipping rates ready for ${GOVERNORATES.length} governorates`);
 }
 
 main()

@@ -1,8 +1,8 @@
 import { cacheLife, cacheTag } from "next/cache";
 import type { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
-import { env } from "@/lib/env";
-import type { AgeBand, Category, Gender, Product, ProductStatus, Tone } from "./types";
+import type { AgeBand, Category, Gender, Product, Tone } from "./types";
+import { visibleStatuses } from "./visibility";
 
 /**
  * Data access boundary. Pages only call these functions. Every read is
@@ -18,11 +18,6 @@ const toneByBand: Record<AgeBand, Record<Gender, Tone>> = {
   OLDER: { GIRLS: "sun", BOYS: "sand", UNISEX: "mint" },
   TEEN: { GIRLS: "rose", BOYS: "sky", UNISEX: "mint" },
 };
-
-/** DRAFT products only show when SHOW_DRAFT_PRODUCTS=true (local development). */
-function visibleStatuses(): ProductStatus[] {
-  return env.SHOW_DRAFT_PRODUCTS ? ["ACTIVE", "DRAFT"] : ["ACTIVE"];
-}
 
 type CategoryRow = Prisma.CategoryGetPayload<object>;
 
@@ -72,6 +67,7 @@ function mapProduct(row: ProductRow): Product {
     updatedAt: row.updatedAt.toISOString(),
     images: row.images.map((i) => ({ url: i.url, alt: i.alt })),
     variants: row.variants.map((v) => ({
+      id: v.id,
       sku: v.sku,
       size: v.size,
       color: v.color ?? undefined,
