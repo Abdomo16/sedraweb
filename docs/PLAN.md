@@ -1,4 +1,4 @@
-# Cedar Kids (سيدر كيدز) — Project Plan
+# Cedar Kids (سيدرا كيدز) — Project Plan
 
 Kids homewear e-commerce, Egypt only, up to ~500 products, Arabic (RTL) only at launch.
 **Top priority: SEO and speed.** Everything below is a plan; nothing is implemented yet.
@@ -146,8 +146,8 @@ Order status machine: `PENDING → CONFIRMED → SHIPPED → DELIVERED`, plus `C
 - **One H1 per page**, logical heading hierarchy, semantic HTML.
 - **Metadata API** for every page: unique `title` (≤60 chars) and `description` (≤155), canonical URL, Open Graph, Twitter, `lang="ar" dir="rtl"`.
 - **Title templates**
-  - Product: `{اسم المنتج} | {نوع القماش} للأطفال | سيدر كيدز`
-  - Collection: `{تصنيف} للأطفال – ملابس منزلية | سيدر كيدز`
+  - Product: `{اسم المنتج} | {نوع القماش} للأطفال | سيدرا كيدز`
+  - Collection: `{تصنيف} للأطفال – ملابس منزلية | سيدرا كيدز`
 - **Structured data (JSON-LD)**: `Organization` + `WebSite` (sitelinks search), `BreadcrumbList` everywhere, `Product` + `Offer` (price EGP, availability, SKU, brand), `AggregateRating`/`Review` only when real reviews exist, `CollectionPage`/`ItemList`, `Article` for blog, `FAQPage` where genuine FAQs exist, `LocalBusiness` if a physical address exists.
 - **sitemap.xml** generated from DB (products, collections, posts, static), with `lastmod`. **robots.txt** blocks `/admin`, `/cart`, `/checkout`, `/order`, `/track`, `/api`, and filter/sort query params.
 - **Canonicals + noindex** for filter/sort/pagination variants (`?sort=`, `?size=`); clean pagination (`?page=2`) with self-canonical.
