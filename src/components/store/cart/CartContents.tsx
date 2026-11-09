@@ -254,7 +254,7 @@ export function CartContents({ compact }: { compact: boolean }) {
         ) : null}
       </div>
 
-      <div className="border-leaf-700/10 border-t bg-white p-4">
+      <div className="border-leaf-700/10 border-t bg-white p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
         <div className="flex items-baseline justify-between">
           <span className="text-sm font-bold">إجمالي المنتجات</span>
           <span className="font-display text-leaf-900 text-xl font-extrabold">
