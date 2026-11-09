@@ -24,10 +24,11 @@ export function productSchema(product: Product, category: Category) {
     "@type": "Product",
     name: product.name,
     description: product.description,
+    ...(product.images.length ? { image: product.images.map((i) => abs(i.url)) } : {}),
     sku: product.variants[0]?.sku,
     category: category.name,
-    brand: { "@type": "Brand", name: siteConfig.name },
-    material: product.material,
+    brand: { "@type": "Brand", name: category.brand ?? siteConfig.name },
+    ...(product.material ? { material: product.material } : {}),
     offers: {
       "@type": "AggregateOffer",
       priceCurrency: siteConfig.currency,
