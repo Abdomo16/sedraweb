@@ -30,7 +30,7 @@ export function ProductImage({
     );
   }
   return (
-    <div className={`relative aspect-[3/4] w-full overflow-hidden bg-leaf-50 ${className}`}>
+    <div className={`bg-leaf-50 relative aspect-[3/4] w-full overflow-hidden ${className}`}>
       <Image
         src={image.url}
         alt={image.alt}
