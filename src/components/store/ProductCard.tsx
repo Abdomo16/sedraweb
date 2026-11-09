@@ -38,10 +38,10 @@ export function ProductCard({ product, className = "" }: { product: Product; cla
                   {s}
                 </span>
               ))}
-              {extra > 0 ? <span className="text-ink/60 text-[11px]">+{extra}</span> : null}
+              {extra > 0 ? <span className="text-ink/75 text-[11px]">+{extra}</span> : null}
             </>
           ) : (
-            <span className="text-ink/60 text-xs">غير متاح حالياً</span>
+            <span className="text-ink/75 text-xs">غير متاح حالياً</span>
           )}
         </div>
       </Link>

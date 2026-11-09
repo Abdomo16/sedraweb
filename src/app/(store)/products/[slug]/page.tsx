@@ -16,6 +16,7 @@ import {
   minPrice,
 } from "@/features/catalog/queries";
 import type { Tone } from "@/features/catalog/types";
+import { defaultOgImages } from "@/lib/seo/og";
 import { breadcrumbSchema, productSchema } from "@/lib/seo/schema";
 
 export async function generateStaticParams() {
@@ -37,7 +38,7 @@ export async function generateMetadata({
     title,
     description,
     alternates: { canonical: `/products/${product.slug}` },
-    openGraph: { title, description, type: "website" },
+    openGraph: { title, description, type: "website", images: defaultOgImages },
   };
 }
 
@@ -69,7 +70,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
         ]}
       />
       <Container className="pt-4 pb-28 md:pb-10">
-        <nav aria-label="مسار التصفح" className="text-ink/60 mb-3 text-xs">
+        <nav aria-label="مسار التصفح" className="text-ink/75 mb-3 text-xs">
           <Link href="/">الرئيسية</Link> /{" "}
           <Link href={`/collections/${category.slug}`}>{category.shortName}</Link>
         </nav>
@@ -94,7 +95,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
             <h1 className="font-display text-leaf-900 text-3xl leading-10 font-extrabold">
               {product.name}
             </h1>
-            <p className="text-ink/60 mt-1 text-sm">{category.name}</p>
+            <p className="text-ink/75 mt-1 text-sm">{category.name}</p>
             <div className="mt-4">
               <PurchasePanel variants={product.variants} />
             </div>

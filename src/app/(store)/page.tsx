@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ProductCarousel, ProductGrid } from "@/components/store/ProductCard";
 import {
@@ -14,6 +15,10 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Layout";
 import { getProducts } from "@/features/catalog/queries";
 import { faqSchema } from "@/lib/seo/schema";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default async function HomePage() {
   const [fresh, popular] = await Promise.all([

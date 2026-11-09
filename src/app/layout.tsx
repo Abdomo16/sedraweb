@@ -30,7 +30,9 @@ export const metadata: Metadata = {
     locale: siteConfig.locale,
     siteName: siteConfig.name,
   },
-  alternates: { canonical: "/" },
+  twitter: { card: "summary_large_image" },
+  // No site-wide canonical here: each page sets its own, otherwise pages
+  // without one would all point at the home page.
 };
 
 export const viewport: Viewport = {

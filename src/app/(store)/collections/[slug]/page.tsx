@@ -6,6 +6,7 @@ import { Faq } from "@/components/store/HomeSections";
 import { ProductGrid } from "@/components/store/ProductCard";
 import { Container } from "@/components/ui/Layout";
 import { getCategories, getCategory, getProducts } from "@/features/catalog/queries";
+import { defaultOgImages } from "@/lib/seo/og";
 import { breadcrumbSchema, collectionSchema, faqSchema } from "@/lib/seo/schema";
 
 export async function generateStaticParams() {
@@ -22,7 +23,11 @@ export async function generateMetadata({
     title: category.seoTitle,
     description: category.seoDescription,
     alternates: { canonical: `/collections/${category.slug}` },
-    openGraph: { title: category.seoTitle, description: category.seoDescription },
+    openGraph: {
+      title: category.seoTitle,
+      description: category.seoDescription,
+      images: defaultOgImages,
+    },
   };
 }
 
@@ -60,7 +65,7 @@ export default async function CollectionPage({ params }: PageProps<"/collections
         ]}
       />
       <Container className="py-6">
-        <nav aria-label="مسار التصفح" className="text-ink/60 mb-3 text-xs">
+        <nav aria-label="مسار التصفح" className="text-ink/75 mb-3 text-xs">
           <Link href="/">الرئيسية</Link> / <Link href="/collections">الأقسام</Link> /{" "}
           {category.shortName}
         </nav>
@@ -68,6 +73,7 @@ export default async function CollectionPage({ params }: PageProps<"/collections
           {category.name}
         </h1>
         <p className="text-ink/80 mt-2 text-sm leading-8">{category.intro}</p>
+        <h2 className="sr-only">منتجات {category.name}</h2>
         <div className="mt-6">
           {products.length ? (
             <ProductGrid products={products} />

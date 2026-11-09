@@ -11,6 +11,7 @@ export default function StoreLayout({ children }: { children: React.ReactNode })
           {
             "@context": "https://schema.org",
             "@type": "Organization",
+            "@id": `${siteConfig.url}/#organization`,
             name: siteConfig.name,
             alternateName: siteConfig.nameVariants,
             logo: `${siteConfig.url}/logo.png`,

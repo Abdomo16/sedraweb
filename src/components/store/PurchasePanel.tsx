@@ -55,7 +55,7 @@ export function PurchasePanel({ variants }: { variants: Variant[] }) {
         <div className="mx-auto flex max-w-5xl items-center gap-3 md:max-w-none">
           <div className="min-w-0 flex-1 md:hidden">
             <Price price={shown.price} compareAt={shown.compareAtPrice} />
-            <p className="text-ink/60 truncate text-xs">
+            <p className="text-ink/75 truncate text-xs">
               {selected ? `المقاس ${selected.size}` : "اختار المقاس"}
             </p>
           </div>
