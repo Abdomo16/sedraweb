@@ -13,7 +13,7 @@ const body = Cairo({
 const display = Baloo_Bhaijaan_2({
   variable: "--font-baloo",
   subsets: ["arabic", "latin"],
-  weight: ["600", "800"],
+  weight: ["800"],
   display: "swap",
 });
 

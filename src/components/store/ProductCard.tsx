@@ -65,7 +65,7 @@ export function ProductCarousel({ products }: { products: Product[] }) {
   return (
     <ul className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2">
       {products.map((p) => (
-        <li key={p.slug} className="w-40 shrink-0 snap-start md:w-52">
+        <li key={p.slug} className="w-44 shrink-0 snap-start md:w-60">
           <ProductCard product={p} />
         </li>
       ))}

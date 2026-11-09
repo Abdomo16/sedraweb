@@ -28,10 +28,25 @@ export function Logo({
   );
 }
 
+const announcements = [
+  "شحن لكل محافظات مصر · الدفع عند الاستلام متاح",
+  "هوم وير وبيجامات ناعمة للأطفال من 6 شهور لـ 16 سنة",
+];
+
+/** Two short messages that take turns (CSS only; without motion the first one stays). */
 export function AnnouncementBar() {
   return (
-    <div className="bg-leaf-900 py-2 text-center text-xs font-bold text-white">
-      شحن لكل محافظات مصر · الدفع عند الاستلام متاح
+    <div className="bg-leaf-900 relative h-9 overflow-hidden text-center text-xs font-bold text-white">
+      {announcements.map((text, i) => (
+        <p
+          key={text}
+          className={`announce absolute inset-0 flex items-center justify-center px-4 ${
+            i === 0 ? "announce-first" : "announce-second"
+          }`}
+        >
+          {text}
+        </p>
+      ))}
     </div>
   );
 }
@@ -46,7 +61,7 @@ export async function Header() {
         </Link>
         <Link
           href="/collections"
-          className="text-ink/70 shadow-soft flex min-h-11 flex-1 items-center gap-2 rounded-full bg-white px-4 text-sm"
+          className="text-ink/70 shadow-soft flex min-h-11 flex-1 items-center gap-2 rounded-full bg-white px-4 text-sm md:mx-auto md:max-w-md"
         >
           <Icon name="search" className="size-5" />
           ابحث عن بيجامة...

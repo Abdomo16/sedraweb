@@ -1,6 +1,7 @@
 import { CartDrawerHost } from "@/components/store/cart/CartDrawerHost";
 import { AnnouncementBar, BottomTabBar, Footer, Header } from "@/components/store/Shell";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { social } from "@/config/home";
 import { siteConfig } from "@/config/site";
 
 /** Public storefront shell. */
@@ -17,6 +18,7 @@ export default function StoreLayout({ children }: { children: React.ReactNode })
             alternateName: siteConfig.nameVariants,
             logo: `${siteConfig.url}/logo.png`,
             url: siteConfig.url,
+            sameAs: [social.facebook, social.instagram],
           },
           {
             "@context": "https://schema.org",
