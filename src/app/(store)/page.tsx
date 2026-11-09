@@ -13,7 +13,7 @@ import {
 } from "@/components/store/HomeSections";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Layout";
-import { getProducts } from "@/features/catalog/queries";
+import { getProduct, getProducts } from "@/features/catalog/queries";
 import { faqSchema } from "@/lib/seo/schema";
 
 export const metadata: Metadata = {
@@ -21,14 +21,21 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [fresh, popular] = await Promise.all([
+  const [fresh, popular, heroShe, heroBaby, heroKids] = await Promise.all([
     getProducts({ onlyNew: true, limit: 8 }),
     getProducts({ limit: 8 }),
+    getProducts({ categorySlug: "he-and-she-girls", limit: 1 }),
+    getProduct("baby-boy-102"),
+    getProducts({ categorySlug: "girls", limit: 1 }),
   ]);
+  // Three photos for the hero collage, picked from different age groups.
+  const heroPhotos = [heroBaby, heroKids[0], heroShe[0]]
+    .map((p) => p?.images[0])
+    .filter((i): i is NonNullable<typeof i> => Boolean(i));
 
   return (
     <>
-      <Hero />
+      <Hero photos={heroPhotos} />
       <AgeShortcuts />
       <CategoryCards />
       <section aria-labelledby="new-title" className="py-8">

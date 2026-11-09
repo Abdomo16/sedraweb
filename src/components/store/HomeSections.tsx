@@ -1,10 +1,12 @@
+import Image from "next/image";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon, type IconName } from "@/components/ui/Icons";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { Container } from "@/components/ui/Layout";
 import { getCategories } from "@/features/catalog/queries";
+import type { ProductImage } from "@/features/catalog/types";
 
 /** Section title with a small accent bar. Shared by home + listing pages. */
 export function SectionTitle({
@@ -41,7 +43,36 @@ function Sparkle({ className }: { className: string }) {
   );
 }
 
-export function Hero() {
+function HeroPhoto({
+  photo,
+  className,
+  delay,
+  main = false,
+}: {
+  photo: ProductImage;
+  className: string;
+  delay: string;
+  main?: boolean;
+}) {
+  return (
+    <div className={`float absolute ${className}`} style={{ "--d": delay } as CSSProperties}>
+      <div className="rounded-card shadow-soft bg-leaf-100 relative aspect-[3/4] overflow-hidden ring-4 ring-white">
+        <Image
+          src={photo.url}
+          alt={photo.alt}
+          fill
+          sizes="(min-width: 768px) 176px, 144px"
+          loading="eager"
+          fetchPriority={main ? "high" : "auto"}
+          className="object-cover"
+        />
+      </div>
+    </div>
+  );
+}
+
+/** `photos`: three product photos (left, center, right). Falls back to illustrations. */
+export function Hero({ photos = [] }: { photos?: ProductImage[] }) {
   return (
     <section className="bg-leaf-50 relative overflow-hidden">
       <Sparkle className="text-sun-400/70 start-6 top-8 size-5" />
@@ -75,23 +106,49 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="relative mx-auto h-80 w-full max-w-xs md:h-96">
-          <div className="absolute end-2 top-0 w-40 rotate-6 md:w-48">
-            <ImagePlaceholder
-              tone="sun"
-              label="بيجامة بناتي"
-              className="rounded-card shadow-soft ring-4 ring-white"
-            />
-          </div>
-          <div className="absolute start-2 bottom-0 w-40 -rotate-6 md:w-48">
-            <ImagePlaceholder
-              tone="sky"
-              label="بيجامة ولادي"
-              className="rounded-card shadow-soft ring-4 ring-white"
-            />
-          </div>
-          <p className="text-leaf-900 shadow-soft absolute inset-x-0 top-1/2 mx-auto w-fit -translate-y-1/2 rounded-full bg-white px-4 py-2 text-xs font-bold whitespace-nowrap">
-            قطن 100% ناعم
+        <div className="relative mx-auto h-[22rem] w-full max-w-sm md:h-[27rem]">
+          {photos.length >= 3 ? (
+            <>
+              <HeroPhoto
+                photo={photos[0]}
+                delay="0s"
+                className="end-0 top-2 w-32 rotate-6 md:w-40"
+              />
+              <HeroPhoto
+                photo={photos[1]}
+                delay="-2s"
+                main
+                className="inset-x-0 top-12 z-[1] mx-auto w-40 md:w-48"
+              />
+              <HeroPhoto
+                photo={photos[2]}
+                delay="-4s"
+                className="start-0 top-24 w-32 -rotate-6 md:w-40"
+              />
+            </>
+          ) : (
+            <>
+              <div className="float absolute end-2 top-0 w-40 rotate-6 md:w-48">
+                <ImagePlaceholder
+                  tone="sun"
+                  label="بيجامة بناتي"
+                  className="rounded-card shadow-soft ring-4 ring-white"
+                />
+              </div>
+              <div
+                className="float absolute start-2 bottom-0 w-40 -rotate-6 md:w-48"
+                style={{ "--d": "-3s" } as CSSProperties}
+              >
+                <ImagePlaceholder
+                  tone="sky"
+                  label="بيجامة ولادي"
+                  className="rounded-card shadow-soft ring-4 ring-white"
+                />
+              </div>
+            </>
+          )}
+          <p className="text-leaf-900 shadow-soft absolute inset-x-0 bottom-2 z-[2] mx-auto w-fit rounded-full bg-white px-4 py-2 text-xs font-bold whitespace-nowrap">
+            هوم وير ناعم ومريح
           </p>
         </div>
       </Container>
@@ -203,7 +260,7 @@ export async function CategoryCards() {
           {categories.map((c, i) => {
             const wide = oddCount && i === categories.length - 1;
             return (
-              <li key={c.slug} className={wide ? "col-span-2 md:col-span-1" : ""}>
+              <li key={c.slug} className={`reveal ${wide ? "col-span-2 md:col-span-1" : ""}`}>
                 <Link
                   href={`/collections/${c.slug}`}
                   className={`rounded-card shadow-soft group block overflow-hidden bg-white transition-transform hover:-translate-y-0.5 ${
@@ -211,11 +268,19 @@ export async function CategoryCards() {
                   }`}
                 >
                   <div className={wide ? "w-2/5 shrink-0 md:w-full" : ""}>
-                    <ImagePlaceholder
-                      tone={c.tone}
-                      label={c.name}
-                      className={wide ? "aspect-square md:aspect-square" : "aspect-square"}
-                    />
+                    {c.image ? (
+                      <div className="bg-leaf-50 relative aspect-[4/5] overflow-hidden">
+                        <Image
+                          src={c.image}
+                          alt={c.name}
+                          fill
+                          sizes="(min-width: 768px) 25vw, 50vw"
+                          className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
+                        />
+                      </div>
+                    ) : (
+                      <ImagePlaceholder tone={c.tone} label={c.name} className="aspect-square" />
+                    )}
                   </div>
                   <span className="flex flex-1 items-center justify-between gap-2 px-4 py-3 text-sm font-bold">
                     {c.shortName}
@@ -246,7 +311,7 @@ export function TrustStrip() {
       <Container>
         <ul className="grid grid-cols-2 gap-3 md:grid-cols-4">
           {trust.map((t) => (
-            <li key={t.title} className={`rounded-card p-4 ${t.bg}`}>
+            <li key={t.title} className={`reveal rounded-card p-4 ${t.bg}`}>
               <span className="shadow-soft flex size-11 items-center justify-center rounded-full bg-white">
                 <Icon name={t.icon} className="text-leaf-700 size-6" />
               </span>
