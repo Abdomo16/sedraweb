@@ -40,7 +40,7 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >
-      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[2rem] bg-white shadow-[0_24px_60px_-20px_rgb(36_63_23/0.45)] ring-[6px] ring-white">
+      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] bg-white shadow-[0_24px_60px_-20px_rgb(36_63_23/0.45)] ring-[6px] ring-white md:aspect-[3/4]">
         {slides.map((s, i) =>
           i === 0 || more ? (
             <Link

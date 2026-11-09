@@ -43,7 +43,7 @@ export async function HeroShowcase() {
       <Leaf className="text-leaf-500/20 end-[4%] bottom-24 size-20 -rotate-45" />
       <WaveLine className="start-[34%] top-6 hidden w-32 text-sky-500/30 md:block" />
 
-      <Container className="relative grid items-center gap-6 pt-5 pb-14 md:grid-cols-[1fr_26rem] md:gap-12 md:py-14">
+      <Container className="relative grid items-center gap-5 pt-4 pb-14 md:grid-cols-[1fr_26rem] md:gap-12 md:py-14">
         <div className="order-2 md:order-1">
           <p className="bg-sun-100 text-leaf-900 mb-3 inline-block rounded-full px-3.5 py-1.5 text-xs font-bold">
             هوم وير وبيجامات أطفال

@@ -51,3 +51,11 @@ export const social = {
   /** As shown on the Facebook page; update when it changes. */
   facebookFollowers: "٩١ ألف",
 } as const;
+
+/**
+ * How the categories show on phones, right under the header:
+ *   "chips"   text pills (كل الأقسام، بيبي بناتي ...)
+ *   "circles" round photos
+ * Change this one word to switch back and forth.
+ */
+export const mobileCategoryStyle: "chips" | "circles" = "chips";
