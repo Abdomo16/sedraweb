@@ -3,7 +3,7 @@ import { requireAdmin } from "@/features/admin/auth/guard";
 import { db } from "@/lib/db";
 
 async function counts() {
-  const [active, review, drafts, archived, soldOut, categories, hiddenCategories] =
+  const [active, review, drafts, archived, soldOut, categories, hiddenCategories, pendingOrders] =
     await Promise.all([
       db.product.count({ where: { status: "ACTIVE" } }),
       db.product.count({ where: { needsReview: true } }),
@@ -14,8 +14,9 @@ async function counts() {
       }),
       db.category.count({ where: { isActive: true } }),
       db.category.count({ where: { isActive: false } }),
+      db.order.count({ where: { status: "PENDING" } }),
     ]);
-  return { active, review, drafts, archived, soldOut, categories, hiddenCategories };
+  return { active, review, drafts, archived, soldOut, categories, hiddenCategories, pendingOrders };
 }
 
 function Stat({
@@ -54,6 +55,15 @@ export default async function AdminHome() {
     <div>
       <h1 className="font-display text-leaf-900 text-2xl font-extrabold">أهلاً بيك</h1>
       <p className="text-ink/70 mt-1 text-sm">ملخص سريع للمتجر.</p>
+
+      {c.pendingOrders > 0 ? (
+        <Link
+          href="/admin/orders"
+          className="bg-leaf-700 mt-5 block rounded-2xl p-4 text-sm font-bold text-white"
+        >
+          فيه {c.pendingOrders.toLocaleString("ar-EG")} طلب محتاج تأكيد. اضغط عشان تكلّم العملاء.
+        </Link>
+      ) : null}
 
       {c.review > 0 ? (
         <Link

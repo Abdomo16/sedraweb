@@ -107,6 +107,20 @@
 - **New-order alerts:** inside the admin dashboard only (menu badge, "needs confirmation" counter, the browser tab title shows the count, and the list refreshes by itself every 30 seconds).
 - **Deposit:** it is a partial payment the team takes by phone (for example 100 of a 500 EGP order). Phase 5 only records the amount and shows "to collect on delivery"; the rules around it come later.
 
-**Proposed, waiting for the owner**
-- **Unconfirmed orders:** never deleted. Highlight yellow after 24 hours and red after 72 hours in the queue; optionally auto-cancel after N days (setting, can be off) with the reason "no answer", stock returned, and the order can be reopened if the stock is still there.
-- Whether a small discount for online payment is offered when Phase 7 arrives.
+- **Unconfirmed or unreachable orders:** the team decides. There are no timers and no automatic cancellation. The admin cancels an order by hand (a reason is required, stock returns to the shelf) and can reopen it later if the stock is still available.
+- **Out of the first version:** discount for paying online (revisit in Phase 7).
+
+## 8. Status (built and verified)
+
+**Done**
+- Cart on the device (shared between tabs), add to cart with a quantity limited by stock, header and tab-bar cart icon with a count, slide-in drawer (free-shipping bar, low-stock hints, suggestions and recently viewed), cart page.
+- Checkout: one page, phone first, live shipping price, cash on delivery, double-submit protection, honeypot, per-device and per-phone limits. Confirmation page with a private link and the sentence about the team calling to confirm.
+- Server rules tested: Arabic digits in phone numbers, the "last piece" race (two buyers, one gets it), a repeated submit returning the same order, price and shipping read from the database, price snapshots on the order.
+- Admin: orders (tabs with counters, search, auto refresh), order page (call and WhatsApp buttons, confirm with an optional deposit, no answer, cancel with a required reason, reopen, ship / deliver / return, notes, history), menu badge and tab-title counter, shipping prices page with a launch guard.
+- Cart, checkout and order pages are `noindex`; public page scores did not change.
+
+**Not done**
+- Bosta shipments and tracking (Phase 6), card and wallet payments with the "paid online" tab filling up (Phase 7).
+- Order statistics (best sellers, orders per governorate, revenue): the orders data now exists, so this is the next admin step.
+- Email or Telegram alerts, discount codes (deliberately left out).
+
