@@ -273,8 +273,7 @@ export function CheckoutView({ shipping, open }: { shipping: ShippingInfo; open:
               الدفع عند الاستلام
             </p>
             <p className="text-ink/80 mt-2 text-sm leading-7">
-              بتدفع لما الأوردر يوصلك. وبعد ما تأكد الطلب هيتم التواصل مع حضرتك لتأكيده قبل
-              الشحن.
+              بتدفع لما الأوردر يوصلك. وبعد ما تأكد الطلب هيتم التواصل مع حضرتك لتأكيده قبل الشحن.
             </p>
           </div>
         </section>

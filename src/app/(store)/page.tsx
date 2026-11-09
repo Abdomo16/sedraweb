@@ -1,19 +1,13 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ProductCarousel, ProductGrid } from "@/components/store/ProductCard";
-import {
-  AgeShortcuts,
-  BrandText,
-  CategoryCards,
-  Faq,
-  Hero,
-  SectionTitle,
-  TrustStrip,
-  homeFaq,
-} from "@/components/store/HomeSections";
+import { BrandText, Faq, SectionTitle, TrustStrip, homeFaq } from "@/components/store/HomeSections";
+import { AgeTiles } from "@/components/store/home/AgeTiles";
+import { HeroShowcase } from "@/components/store/home/HeroShowcase";
+import { SocialProof } from "@/components/store/home/SocialProof";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Layout";
-import { getProduct, getProducts } from "@/features/catalog/queries";
+import { getProducts } from "@/features/catalog/queries";
 import { faqSchema } from "@/lib/seo/schema";
 
 export const metadata: Metadata = {
@@ -21,23 +15,15 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [fresh, popular, heroShe, heroBaby, heroKids] = await Promise.all([
+  const [fresh, popular] = await Promise.all([
     getProducts({ onlyNew: true, limit: 8 }),
     getProducts({ limit: 8 }),
-    getProducts({ categorySlug: "he-and-she-girls", limit: 1 }),
-    getProduct("baby-boy-102"),
-    getProducts({ categorySlug: "girls", limit: 1 }),
   ]);
-  // Three photos for the hero collage, picked from different age groups.
-  const heroPhotos = [heroBaby, heroKids[0], heroShe[0]]
-    .map((p) => p?.images[0])
-    .filter((i): i is NonNullable<typeof i> => Boolean(i));
 
   return (
     <>
-      <Hero photos={heroPhotos} />
-      <AgeShortcuts />
-      <CategoryCards />
+      <HeroShowcase />
+      <AgeTiles />
       <section aria-labelledby="new-title" className="py-8">
         <Container>
           <SectionTitle
@@ -53,6 +39,7 @@ export default async function HomePage() {
           <ProductCarousel products={fresh} />
         </Container>
       </section>
+      <SocialProof />
       <TrustStrip />
       <section aria-labelledby="best-title" className="py-4">
         <Container>

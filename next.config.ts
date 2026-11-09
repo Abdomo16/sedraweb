@@ -11,6 +11,11 @@ const canonicalHost =
 const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
+  images: {
+    // AVIF first: smaller files, so the big home photos load fast on phones.
+    formats: ["image/avif", "image/webp"],
+    qualities: [70, 75],
+  },
   async redirects() {
     return [
       ...(canonicalHost
