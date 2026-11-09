@@ -116,9 +116,15 @@ html {
 }
 dialog.cart-drawer[open] {
   animation: drawer-in 0.28s ease-out;
+  overscroll-behavior: contain;
+}
+/* The page behind the open cart must not scroll. */
+html:has(dialog.cart-drawer[open]) {
+  overflow: hidden;
 }
 dialog.cart-drawer::backdrop {
-  background: rgb(36 63 23 / 0.45);
+  /* Neutral dark overlay: a tinted one would turn the whole page green. */
+  background: rgb(0 0 0 / 0.4);
   animation: backdrop-in 0.28s ease-out;
 }
 @media (prefers-reduced-motion: reduce) {

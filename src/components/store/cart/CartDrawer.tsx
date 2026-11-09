@@ -20,7 +20,7 @@ export default function CartDrawer() {
     <dialog
       ref={ref}
       aria-label="سلة التسوق"
-      className="cart-drawer bg-cream text-ink fixed inset-y-0 start-auto end-0 m-0 hidden h-dvh max-h-none w-[min(26rem,100vw)] flex-col p-0 open:flex"
+      className="cart-drawer bg-cream text-ink fixed inset-y-0 start-auto end-0 m-0 hidden h-dvh max-h-none w-full max-w-none flex-col p-0 open:flex sm:w-[26rem]"
       onClose={closeCart}
       onClick={(e) => {
         if (e.target === ref.current) closeCart();
