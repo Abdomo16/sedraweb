@@ -17,9 +17,11 @@ export function Logo({
     <Image
       src="/logo.png"
       alt={siteConfig.name}
-      width={181}
-      height={120}
-      priority={priority}
+      width={700}
+      height={425}
+      sizes="120px"
+      loading={priority ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : "auto"}
       className={className}
     />
   );
