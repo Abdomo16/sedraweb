@@ -40,7 +40,7 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >
-      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] bg-white shadow-[0_24px_60px_-20px_rgb(36_63_23/0.45)] ring-[6px] ring-white md:aspect-[3/4]">
+      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-white shadow-[0_20px_44px_-24px_rgb(36_63_23/0.45)] md:aspect-[3/4]">
         {slides.map((s, i) =>
           i === 0 || more ? (
             <Link
@@ -57,14 +57,14 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
                 alt={s.alt}
                 fill
                 quality={70}
-                sizes="(min-width: 1024px) 420px, 88vw"
+                sizes="(min-width: 1024px) 560px, 88vw"
                 preload={i === 0}
                 loading={i === 0 ? "eager" : "lazy"}
                 fetchPriority={i === 0 ? "high" : "low"}
                 className="object-cover object-top"
               />
               <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent p-4 pt-16">
-                <span className="bg-sun-400 text-leaf-900 inline-block rounded-full px-3 py-1 text-xs font-bold">
+                <span className="text-leaf-900 inline-block rounded-md bg-white px-2.5 py-1 text-[11px] font-bold">
                   {s.eyebrow}
                 </span>
                 <span className="font-display mt-2 flex items-center gap-2 text-xl leading-8 font-extrabold text-white">
@@ -90,8 +90,8 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
             >
               <span
                 aria-hidden="true"
-                className={`block h-2.5 rounded-full transition-all ${
-                  i === active ? "bg-leaf-700 w-8" : "bg-leaf-700/25 w-2.5"
+                className={`block h-0.5 rounded-full transition-all ${
+                  i === active ? "bg-leaf-900 w-8" : "bg-leaf-900/25 w-4"
                 }`}
               />
             </button>

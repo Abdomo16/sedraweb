@@ -15,12 +15,11 @@ export function SectionTitle({
   action?: ReactNode;
 }) {
   return (
-    <div className="mb-5 flex items-end justify-between gap-3">
+    <div className="mb-6 flex items-end justify-between gap-3">
       <h2
         id={id}
-        className="font-display text-leaf-900 flex items-center gap-2.5 text-2xl leading-9 font-extrabold"
+        className="font-display text-leaf-900 text-2xl leading-9 font-extrabold md:text-3xl"
       >
-        <span aria-hidden="true" className="bg-sun-400 inline-block h-6 w-1.5 rounded-full" />
         {children}
       </h2>
       {action}
@@ -28,25 +27,23 @@ export function SectionTitle({
   );
 }
 
-const trust: { icon: IconName; title: string; text: string; bg: string }[] = [
-  { icon: "leaf", title: "قطن ناعم", text: "خامات لطيفة على بشرة الأطفال", bg: "bg-leaf-50" },
-  { icon: "truck", title: "شحن لكل مصر", text: "توصيل لباب البيت", bg: "bg-sky-100" },
-  { icon: "return", title: "استبدال سهل", text: "لو المقاس مش مناسب", bg: "bg-sun-100" },
-  { icon: "shield", title: "دفع آمن", text: "كاش أو فيزا أو إنستاباي", bg: "bg-sand-100" },
+const trust: { icon: IconName; title: string; text: string }[] = [
+  { icon: "leaf", title: "قطن ناعم", text: "خامات لطيفة على بشرة الأطفال" },
+  { icon: "truck", title: "شحن لكل مصر", text: "توصيل لباب البيت" },
+  { icon: "return", title: "استبدال سهل", text: "لو المقاس مش مناسب" },
+  { icon: "shield", title: "دفع آمن", text: "كاش أو فيزا أو إنستاباي" },
 ];
 
 export function TrustStrip() {
   return (
-    <section className="py-8">
+    <section className="py-10">
       <Container>
-        <ul className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <ul className="border-leaf-900/10 md:divide-leaf-900/10 grid grid-cols-2 gap-y-6 border-y py-6 md:grid-cols-4 md:divide-x md:divide-x-reverse">
           {trust.map((t) => (
-            <li key={t.title} className={`reveal rounded-card p-4 ${t.bg}`}>
-              <span className="shadow-soft flex size-11 items-center justify-center rounded-full bg-white">
-                <Icon name={t.icon} className="text-leaf-700 size-6" />
-              </span>
-              <p className="text-leaf-900 mt-3 font-bold">{t.title}</p>
-              <p className="text-ink/70 text-xs leading-6">{t.text}</p>
+            <li key={t.title} className="flex flex-col items-center px-3 text-center">
+              <Icon name={t.icon} className="text-leaf-700 size-7" />
+              <p className="text-leaf-900 mt-2.5 text-sm font-bold">{t.title}</p>
+              <p className="text-ink/65 mt-0.5 text-xs leading-6">{t.text}</p>
             </li>
           ))}
         </ul>
@@ -77,14 +74,14 @@ export const homeFaq = [
 export function Faq({ items }: { items: { q: string; a: string }[] }) {
   return (
     <section aria-labelledby="faq-title" className="py-8">
-      <Container>
+      <Container size="narrow">
         <SectionTitle id="faq-title">أسئلة شائعة</SectionTitle>
         <div className="grid gap-2.5">
           {items.map((i) => (
             <details key={i.q} className="group rounded-card shadow-soft bg-white px-4 py-3">
               <summary className="flex min-h-10 cursor-pointer list-none items-center justify-between gap-3 font-bold">
                 {i.q}
-                <span className="bg-leaf-100 text-leaf-700 flex size-8 shrink-0 items-center justify-center rounded-full">
+                <span className="text-leaf-700 flex size-8 shrink-0 items-center justify-center">
                   <Icon name="plus" className="size-4 transition-transform group-open:rotate-45" />
                 </span>
               </summary>
@@ -101,7 +98,7 @@ export async function BrandText() {
   const categories = await getCategories();
   return (
     <section className="py-4">
-      <Container>
+      <Container size="narrow">
         <div className="rounded-card bg-leaf-50 p-5">
           <h2 className="font-display text-leaf-900 text-xl font-extrabold">
             سيدرا كيدز، بيجامات أطفال بجودة تستحقها عيلتك

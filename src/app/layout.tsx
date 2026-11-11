@@ -1,19 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Baloo_Bhaijaan_2, Cairo } from "next/font/google";
+import { Almarai } from "next/font/google";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
-const body = Cairo({
-  variable: "--font-cairo",
-  subsets: ["arabic", "latin"],
-  weight: ["400", "700"],
-  display: "swap",
-});
-
-const display = Baloo_Bhaijaan_2({
-  variable: "--font-baloo",
-  subsets: ["arabic", "latin"],
-  weight: ["800"],
+const body = Almarai({
+  variable: "--font-almarai",
+  subsets: ["arabic"],
+  weight: ["400", "700", "800"],
   display: "swap",
 });
 
@@ -43,7 +36,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang={siteConfig.lang} dir="rtl" className={`${body.variable} ${display.variable}`}>
+    <html lang={siteConfig.lang} dir="rtl" className={body.variable}>
       <body className="bg-cream font-body text-ink min-h-dvh antialiased">{children}</body>
     </html>
   );

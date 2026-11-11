@@ -94,13 +94,13 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
             className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0"
           >
             {slides.map((_, i) => (
-              <li key={i} className="w-[70%] shrink-0 snap-center md:w-auto">
+              <li key={i} className="w-[82%] shrink-0 snap-center md:w-auto">
                 <ProductImage
                   product={product}
                   index={i}
-                  sizes="(min-width: 768px) 50vw, 70vw"
+                  sizes="(min-width: 768px) 50vw, 82vw"
                   priority={i === 0}
-                  className="rounded-card"
+                  className="rounded-[1.5rem]"
                 />
               </li>
             ))}

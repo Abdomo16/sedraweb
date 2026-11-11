@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default async function CheckoutPage() {
   const shipping = await getShippingInfo();
   return (
-    <Container className="py-6">
+    <Container size="narrow" className="py-6">
       {/* Focused checkout: the confirm bar owns the bottom of the screen on phones. */}
       <style>{"#bottom-tab-bar{display:none}"}</style>
       <h1 className="font-display text-leaf-900 mb-4 text-3xl font-extrabold">إتمام الطلب</h1>

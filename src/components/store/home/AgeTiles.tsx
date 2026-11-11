@@ -33,14 +33,14 @@ export async function AgeTiles() {
                 <Link
                   href={`/collections/${main.slug}`}
                   aria-label={`${t.label} ${t.sub}`}
-                  className={`rounded-card shadow-soft relative block aspect-[4/5] overflow-hidden ${t.tone}`}
+                  className="rounded-card bg-leaf-50 relative block aspect-[4/5] overflow-hidden"
                 >
                   <Image
                     src={t.cover!.image!}
                     alt=""
                     fill
-                    sizes="(min-width: 768px) 25vw, 50vw"
-                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+                    sizes="(min-width: 1408px) 340px, (min-width: 768px) 25vw, 50vw"
+                    className="object-cover object-top"
                   />
                   <span
                     aria-hidden="true"
@@ -52,13 +52,14 @@ export async function AgeTiles() {
                     {t.label}
                   </p>
                   <p className="text-xs text-white/90 md:text-sm">{t.sub}</p>
-                  <div className="pointer-events-auto mt-2 flex flex-wrap gap-1.5 text-xs font-bold">
+                  <div className="pointer-events-auto mt-2 flex flex-nowrap gap-1.5 text-xs font-bold">
                     {[t.girls, t.boys].map((l) =>
                       l ? (
                         <Link
                           key={l.slug}
                           href={`/collections/${l.slug}`}
-                          className="text-leaf-900 hover:bg-sun-400 flex min-h-9 items-center rounded-full bg-white/95 px-3.5 transition-colors"
+                          aria-label={`${t.label} ${l.label}`}
+                          className="text-leaf-900 hover:bg-leaf-100 flex min-h-9 items-center rounded-lg bg-white/95 px-3.5 transition-colors"
                         >
                           {l.label}
                         </Link>
