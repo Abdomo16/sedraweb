@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Price } from "@/components/ui/Price";
+import { mobileBottomNav } from "@/config/home";
 import { addLine, openCart } from "@/features/cart/store";
 import type { Variant } from "@/features/catalog/types";
 
@@ -42,10 +43,10 @@ export function PurchasePanel({ variants }: { variants: Variant[] }) {
                   setVariantId(v.id);
                   setQty(1);
                 }}
-                className={`disabled:text-ink/30 min-h-11 min-w-14 rounded-full border px-4 text-sm font-bold transition-colors disabled:line-through ${
+                className={`tap disabled:text-ink/30 min-h-11 min-w-14 rounded-lg border px-4 text-sm font-bold disabled:line-through ${
                   active
-                    ? "border-leaf-700 bg-leaf-700 text-white"
-                    : "border-leaf-700/25 text-leaf-900 bg-white"
+                    ? "border-leaf-900 bg-leaf-900 text-white"
+                    : "border-leaf-900/20 text-leaf-900 hover:border-leaf-900 bg-white"
                 }`}
               >
                 {v.size}
@@ -58,7 +59,7 @@ export function PurchasePanel({ variants }: { variants: Variant[] }) {
       {selected ? (
         <div className="mt-4 flex items-center gap-3">
           <span className="text-sm font-bold">الكمية</span>
-          <div className="border-leaf-700/25 flex items-center rounded-full border bg-white">
+          <div className="border-leaf-900/20 flex items-center rounded-lg border bg-white">
             <button
               type="button"
               aria-label="تقليل الكمية"
@@ -89,7 +90,7 @@ export function PurchasePanel({ variants }: { variants: Variant[] }) {
         </div>
       ) : null}
 
-      <div className="border-leaf-700/10 fixed inset-x-0 bottom-14 z-20 border-t bg-white/95 p-3 backdrop-blur md:static md:mt-6 md:border-0 md:bg-transparent md:p-0">
+      <div className={`border-leaf-700/10 fixed inset-x-3 ${mobileBottomNav ? "bottom-[calc(3.75rem+env(safe-area-inset-bottom))]" : "bottom-[calc(0.75rem+env(safe-area-inset-bottom))]"} z-20 rounded-2xl border bg-white/95 p-2.5 shadow-[0_14px_30px_-14px_rgb(36_63_23/0.4)] backdrop-blur md:static md:mt-6 md:rounded-none md:border-0 md:bg-transparent md:p-0 md:shadow-none`}>
         <div className="mx-auto flex max-w-5xl items-center gap-3 md:max-w-none">
           <div className="min-w-0 flex-1 md:hidden">
             <Price price={shown.price} compareAt={shown.compareAtPrice} />

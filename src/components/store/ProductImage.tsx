@@ -30,7 +30,7 @@ export function ProductImage({
     );
   }
   return (
-    <div className={`bg-leaf-50 relative aspect-[3/4] w-full overflow-hidden ${className}`}>
+    <div className={`shimmer relative aspect-[3/4] w-full overflow-hidden ${className}`}>
       <Image
         src={image.url}
         alt={image.alt}
@@ -38,7 +38,7 @@ export function ProductImage({
         sizes={sizes}
         loading={priority ? "eager" : "lazy"}
         fetchPriority={priority ? "high" : "auto"}
-        className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+        className="object-cover"
       />
     </div>
   );

@@ -39,8 +39,9 @@ export const ageTiles = [
     label: "HE and SHE",
     sub: "من 11 لـ 16 سنة",
     cover: "he-and-she-girls",
-    girls: { slug: "he-and-she-girls", label: "SHE بنات" },
-    boys: { slug: "he-and-she-boys", label: "HE ولاد" },
+    // Short labels so both buttons fit side by side on a phone; the tile title says HE and SHE.
+    girls: { slug: "he-and-she-girls", label: "بنات" },
+    boys: { slug: "he-and-she-boys", label: "ولاد" },
     tone: "bg-rose-100",
   },
 ] as const;
@@ -59,3 +60,12 @@ export const social = {
  * Change this one word to switch back and forth.
  */
 export const mobileCategoryStyle: "chips" | "circles" = "chips";
+
+/** Products per page in a collection (an even number keeps the 2-column grid full). */
+export const productsPerPage = 12;
+
+/**
+ * Phones: true shows the bottom bar (الرئيسية، الأقسام، السلة); false hides it and puts a
+ * "الأقسام" button next to the logo instead (the logo is home, the cart is already in the header).
+ */
+export const mobileBottomNav: boolean = false;

@@ -27,7 +27,7 @@ export default async function OrderPage({ params }: PageProps<"/order/[token]">)
   if (!order) notFound();
 
   return (
-    <Container className="py-8">
+    <Container size="narrow" className="py-8">
       <ClearCartOnMount />
       <div className="shadow-soft mx-auto max-w-2xl rounded-3xl bg-white p-6 md:p-8">
         <div className="flex flex-col items-center text-center">

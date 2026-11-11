@@ -33,7 +33,7 @@ export default async function HomePage() {
           <SectionTitle
             id="new-title"
             action={
-              <ButtonLink href="/collections" variant="soft">
+              <ButtonLink href="/collections/new" variant="soft">
                 عرض الكل
               </ButtonLink>
             }

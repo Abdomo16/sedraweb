@@ -32,8 +32,9 @@ export function CartButton({
       {children}
       {count > 0 ? (
         <span
+          key={count}
           aria-hidden="true"
-          className={`bg-sun-400 text-leaf-900 absolute -end-1 -top-1 flex min-w-5 items-center justify-center rounded-full px-1 text-[11px] leading-5 font-bold ${badgeClassName}`}
+          className={`badge-pop bg-sun-400 text-leaf-900 absolute -end-1 -top-1 flex min-w-5 items-center justify-center rounded-full px-1 text-[11px] leading-5 font-bold ${badgeClassName}`}
         >
           {count > 99 ? "99+" : count.toLocaleString("ar-EG")}
         </span>

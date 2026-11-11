@@ -53,7 +53,7 @@ export default async function AboutPage() {
           },
         ]}
       />
-      <Container className="py-6">
+      <Container size="narrow" className="py-6">
         <nav aria-label="مسار التصفح" className="text-ink/75 mb-3 text-xs">
           <Link href="/">الرئيسية</Link> / من نحن
         </nav>

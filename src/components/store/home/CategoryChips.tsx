@@ -10,13 +10,13 @@ export async function CategoryChips() {
   if (categories.length === 0) return null;
 
   const chip =
-    "flex min-h-11 items-center rounded-full px-4 text-sm font-bold whitespace-nowrap transition-colors active:scale-95";
+    "flex min-h-10 items-center rounded-lg px-4 text-sm font-bold whitespace-nowrap transition-colors active:scale-95";
 
   return (
-    <nav aria-label="تصفح الأقسام" className="bg-cream border-leaf-700/10 border-b md:hidden">
+    <nav aria-label="تصفح الأقسام" className="border-leaf-900/10 border-b bg-white md:hidden">
       <ul className="no-scrollbar flex snap-x gap-2 overflow-x-auto px-4 py-2.5">
         <li className="shrink-0 snap-start">
-          <Link href="/collections" className={`${chip} bg-leaf-700 hover:bg-leaf-900 text-white`}>
+          <Link href="/collections" className={`${chip} bg-leaf-900 hover:bg-leaf-700 text-white`}>
             كل الأقسام
           </Link>
         </li>
@@ -24,7 +24,7 @@ export async function CategoryChips() {
           <li key={c.slug} className="shrink-0 snap-start">
             <Link
               href={`/collections/${c.slug}`}
-              className={`${chip} bg-leaf-100 text-leaf-900 hover:bg-leaf-500 hover:text-white`}
+              className={`${chip} border-leaf-900/15 text-leaf-900 hover:bg-leaf-50 border bg-white`}
             >
               {c.shortName}
             </Link>

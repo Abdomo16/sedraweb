@@ -1,13 +1,22 @@
 import type { ReactNode } from "react";
 
+const widths = {
+  /** Browsing pages: grows with big screens so photos can be large. */
+  wide: "max-w-5xl lg:max-w-[88rem] lg:px-8",
+  /** Forms and reading pages: stay comfortable to read. */
+  narrow: "max-w-5xl",
+} as const;
+
 export function Container({
   children,
   className = "",
+  size = "wide",
 }: {
   children: ReactNode;
   className?: string;
+  size?: keyof typeof widths;
 }) {
-  return <div className={`mx-auto w-full max-w-5xl px-4 ${className}`}>{children}</div>;
+  return <div className={`mx-auto w-full px-4 ${widths[size]} ${className}`}>{children}</div>;
 }
 
 export function SectionHeading({
@@ -30,8 +39,8 @@ export function SectionHeading({
 export function Badge({ children, tone = "sun" }: { children: ReactNode; tone?: "sun" | "leaf" }) {
   return (
     <span
-      className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-bold ${
-        tone === "sun" ? "bg-sun-400 text-leaf-900" : "bg-leaf-700 text-white"
+      className={`inline-block rounded-md px-2 py-0.5 text-[11px] font-bold ${
+        tone === "sun" ? "text-leaf-900 bg-white" : "bg-leaf-900 text-white"
       }`}
     >
       {children}

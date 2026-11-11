@@ -1,7 +1,8 @@
+import { BackToTop } from "@/components/store/BackToTop";
 import { CartDrawerHost } from "@/components/store/cart/CartDrawerHost";
 import { AnnouncementBar, BottomTabBar, Footer, Header } from "@/components/store/Shell";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { social } from "@/config/home";
+import { mobileBottomNav, social } from "@/config/home";
 import { siteConfig } from "@/config/site";
 
 /** Public storefront shell. */
@@ -37,11 +38,12 @@ export default function StoreLayout({ children }: { children: React.ReactNode })
       </a>
       <AnnouncementBar />
       <Header />
-      <main id="main" className="pb-20 md:pb-0">
+      <main id="main" className={mobileBottomNav ? "pb-20 md:pb-0" : undefined}>
         {children}
       </main>
       <Footer />
-      <BottomTabBar />
+      {mobileBottomNav ? <BottomTabBar /> : null}
+      <BackToTop />
       <CartDrawerHost />
     </>
   );
